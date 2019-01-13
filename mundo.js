@@ -11,16 +11,19 @@ class Mundo{
 
     preload(){
       this.escena.preload = function() {
-        this.load.image('tile1','./img/tile1.png');
-        this.load.image('tile2','./img/tile2.png');
-        this.load.image('tile3','./img/tile3.png');
+        for(let c=0;c<16;c++){
+          this.load.image('tile'+(c+1),'./img/tile'+(c+1)+'.png');
+        }
       }
     }
 
     start(){
       let e = this.escena;
       this.escena.create = function(){
-        let tile_den   = ['tile1','tile2','tile3'];
+        let tile_den = [];
+        for(let c=0;c<16;c++){
+          tile_den[c] = 'tile'+(c+1);
+        }
         this.isometric = new IsometricWorld(e,'tiles',map,tile_den);
       }
 

@@ -18,7 +18,7 @@ class IsometricWorld{
 
     this.cam_px   = 0.5;
     this.cam_py   = 0.5;
-    this.zoom     = 0.5;
+    this.zoom     = 1;
     this.max_dist = 15;
 
     this.screen_x = 800;
