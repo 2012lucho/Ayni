@@ -1,9 +1,10 @@
 
 class IsometricWorld{
-  constructor(e,i,m){
+  constructor(e,i,m,td){
     this.escena     = e;
     this.sprite_img = i;
     this.sprite_map = m;
+    this.tile_den   = td;
 
     this.config = {
       "sprite_img_H": 1024,
@@ -23,7 +24,7 @@ class IsometricWorld{
     this.screen_x = 800;
     this.screen_y = 600;
 
-    this.tiles  = [];
+    this.tiles    = [];
     this.cant_t = 0;
     this.draw();
   }
@@ -121,7 +122,7 @@ class Tile{
     }
 
     if (this.sprite == ''){
-      this.sprite = this.escena.add.image(this.px,this.py, 'tile1');
+      this.sprite = this.escena.add.image(this.px,this.py, this.p.tile_den[this.tile[0]]);
       this.sprite.depth = this.py;
       this.sprite.setScale(this.p.zoom);
     }

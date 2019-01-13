@@ -12,13 +12,16 @@ class Mundo{
     preload(){
       this.escena.preload = function() {
         this.load.image('tile1','./img/tile1.png');
+        this.load.image('tile2','./img/tile2.png');
+        this.load.image('tile3','./img/tile3.png');
       }
     }
 
     start(){
       let e = this.escena;
       this.escena.create = function(){
-        this.isometric = new IsometricWorld(e,'tiles',map);
+        let tile_den   = ['tile1','tile2','tile3'];
+        this.isometric = new IsometricWorld(e,'tiles',map,tile_den);
       }
 
       this.escena.update = function(){
