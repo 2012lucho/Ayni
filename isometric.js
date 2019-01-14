@@ -18,7 +18,7 @@ class IsometricWorld{
 
     this.cam_px   = 0.5;
     this.cam_py   = 0.5;
-    this.zoom     = 1;
+    this.zoom     = 0.5;
     this.max_dist = 15;
 
     this.screen_x = 800;
@@ -122,7 +122,7 @@ class Tile{
     }
 
     if (this.sprite == ''){
-      this.sprite = this.escena.add.image(this.px,this.py, this.p.tile_den[this.tile[0]]);
+      this.sprite = this.escena.add.image(this.px,this.py, this.p.tile_den[this.tile[0]].den);
       this.sprite.depth = this.py;
       this.sprite.setScale(this.p.zoom);
     }

@@ -11,7 +11,7 @@ class Mundo{
 
     preload(){
       this.escena.preload = function() {
-        for(let c=0;c<16;c++){
+        for(let c=0;c<19;c++){
           this.load.image('tile'+(c+1),'./img/tile'+(c+1)+'.png');
         }
       }
@@ -21,8 +21,8 @@ class Mundo{
       let e = this.escena;
       this.escena.create = function(){
         let tile_den = [];
-        for(let c=0;c<16;c++){
-          tile_den[c] = 'tile'+(c+1);
+        for(let c=0;c<19;c++){
+          tile_den[c] = { 'den':'tile'+(c+1) };
         }
         this.isometric = new IsometricWorld(e,'tiles',map,tile_den);
       }
