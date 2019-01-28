@@ -24,28 +24,36 @@ class Mundo{
         for(let c=0;c<19;c++){
           tile_den[c] = { 'den':'tile'+(c+1) };
         }
-        this.isometric = new IsometricWorld(e,'tiles',map,tile_den);
+        let mapConfig  = {
+          "tiles_x":128,
+          "tiles_y":128,
+          "tiles_z":1,
+        };
+        let GM         = new GeneradorMapa(mapConfig);
+        GM.generarTerreno();
+        this.isometric = new IsometricWorld(e,'tiles',GM.getMapa(),tile_den);
       }
 
       this.escena.update = function(){
+        let vel_desp = 1.235;
         let cursors = this.input.keyboard.createCursorKeys();
           if (cursors.left.isDown){
-            this.isometric.cam_px -= 1.2;
+            this.isometric.cam_px -= vel_desp;
             this.isometric.update();
           }
 
           if (cursors.right.isDown){
-            this.isometric.cam_px += 1.2;
+            this.isometric.cam_px += vel_desp;
             this.isometric.update();
           }
 
           if (cursors.up.isDown ){
-            this.isometric.cam_py -= 1.2;
+            this.isometric.cam_py -= vel_desp;
             this.isometric.update();
           }
 
           if (cursors.down.isDown ){
-            this.isometric.cam_py += 1.2;
+            this.isometric.cam_py += vel_desp;
             this.isometric.update();
           }
       }

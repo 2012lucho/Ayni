@@ -2,10 +2,11 @@
 class Juego{
   constructor(){
     this.config = {
-      type: Phaser.CANVAS,
-      width: 800,
-      height: 600,
-      scene: ''
+      type: Phaser.AUTO,
+      width: 1024,
+      height: 768,
+      scene: '',
+      pixelArt: true,
     }
 
     this.escenas = [
