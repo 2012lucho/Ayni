@@ -14,7 +14,7 @@
    viewBox="0 0 210 297"
    version="1.1"
    id="svg5434"
-   inkscape:version="0.92.1 r15371"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
    sodipodi:docname="agua.svg">
   <defs
      id="defs5428" />
@@ -26,15 +26,15 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.4142136"
-     inkscape:cx="-210.73589"
-     inkscape:cy="715.31687"
+     inkscape:cx="-456.46524"
+     inkscape:cy="610.39785"
      inkscape:document-units="mm"
      inkscape:current-layer="g6050"
      showgrid="false"
      inkscape:window-width="864"
      inkscape:window-height="420"
-     inkscape:window-x="693"
-     inkscape:window-y="355"
+     inkscape:window-x="424"
+     inkscape:window-y="276"
      inkscape:window-maximized="0"
      showguides="false" />
   <metadata
@@ -45,7 +45,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -85,6 +85,16 @@
              y="129.87337"
              transform="matrix(0.87284987,0.48798883,-0.87284987,0.48798883,0,0)" />
         </g>
+        <ellipse
+           style="opacity:1;fill:#ff0000;fill-opacity:1;stroke:none;stroke-width:2.62138987;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="path842"
+           cx="-173.27216"
+           cy="81.613182"
+           rx="1.5800232"
+           ry="1.5711138"
+           inkscape:export-filename="/var/www/html/Ayni/img/point.png"
+           inkscape:export-xdpi="105"
+           inkscape:export-ydpi="105" />
       </g>
       <g
          transform="matrix(0.08549715,0,0,0.08549715,-100.65849,94.462309)"

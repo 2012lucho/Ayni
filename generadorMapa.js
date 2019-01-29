@@ -19,7 +19,7 @@ class GeneradorMapa {
   }
 
   generarCalles(){
-    
+
   }
 
   generarTerreno(){
@@ -27,6 +27,10 @@ class GeneradorMapa {
   }
 
   getMapa(){
+    return this.mapa;
+  }
+
+  getSubMapa(x,y,t_x,t_y){
     return this.mapa;
   }
 }

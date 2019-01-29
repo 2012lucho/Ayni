@@ -16,47 +16,42 @@ class IsometricWorld{
       "map_long_y": m.config.tiles_y,
     };
 
-    this.cam_px   = 64;
-    this.cam_py   = 64;
-    this.cam_pz   = 0;
-    this.zoom     = 0.5;
-    this.max_dist = 15;
-
     this.screen_x = 1024;
     this.screen_y = 768;
+    this.zoom     = 0.5;
 
-    this.tiles  = [];
-    this.cant_t = 0;
+    this.tiles   = [];
+    this.cant_t  = 0;
+    this.cant_px = Math.floor(this.screen_x/(this.config.tile_W * this.zoom/2));
+    this.cant_py = Math.floor(this.screen_y/(this.config.tile_H * this.zoom/4));
+
+    this.cam_px   = -this.cant_px*0.90;
+    this.cam_py   = this.cant_py/4;
+    this.cam_pz   = 0;
 
     this.camera = this.escena.cameras.main;
     this.draw();
   }
 
   draw(){
-    //se comprueba quecam_px y cam_py no se vayan muy lejos del mape
-    if(this.cam_px>this.config.map_long_x+this.max_dist){ this.cam_px = this.config.map_long_x+this.max_dist; }
-    if(this.cam_py>this.config.map_long_y+this.max_dist){ this.cam_py = this.config.map_long_y+this.max_dist; }
-    if(this.cam_px<-this.max_dist){ this.cam_px = -this.max_dist; }
-    if(this.cam_py<-this.max_dist){ this.cam_py = -this.max_dist; }
-
     //se determina la cantidad de tiles que entran en la pantalla
-    let cant_py = Math.floor(this.screen_y/(this.config.tile_H/4));
-    let cant_px = Math.floor(this.screen_x/(this.config.tile_W/2));
+    this.cant_py = Math.floor(this.screen_y/(this.config.tile_H * this.zoom/4));
+    this.cant_px = Math.floor(this.screen_x/(this.config.tile_W * this.zoom/2));
 
     //se determina la posicion inicial y final a "mapear"
-    let px_i = Math.floor(this.cam_px); let px_fin = px_i + cant_py;
-    let py_i = Math.floor(this.cam_py); let py_fin = py_i + cant_px;
+    let px_i = Math.floor(this.cam_px); let px_fin = px_i + this.cant_py;
+    let py_i = Math.floor(this.cam_py); let py_fin = py_i + this.cant_px;
 
     //Se posiciona la camara
     let dx = this.cam_px - Math.floor(this.cam_px); let dy = this.cam_py - Math.floor(this.cam_py); // parte decimal
-    this.camera.scrollX = (px_i + dx - py_i - dy) * ((this.config.tile_W)/2);
-    this.camera.scrollY = (px_i + dx + py_i + dy) * ((this.config.tile_H)/3.555) - this.cam_pz*((this.config.tile_H)/2.5);
+    this.camera.scrollX = (px_i + dx - py_i - dy) * ((this.config.tile_W)/2) + this.cant_px*this.config.tile_W*this.zoom;
+    this.camera.scrollY = (px_i + dx + py_i + dy) * ((this.config.tile_H)/3.555) - this.cam_pz*((this.config.tile_H)/2.5) + this.cant_py * this.config.tile_W*this.zoom/7;
     this.camera.zoom    = this.zoom;
 
     //Se dibujan todas las capas, empezando de la de mas abajo
     for(let c=0;c<this.sprite_map.data.length; c++){
-      this.drawTiles(cant_py,px_fin,px_i,py_i,c,this.sprite_map.data[c]);//"par"
-      this.drawTiles(cant_py,px_fin,px_i+1,py_i,c,this.sprite_map.data[c]);//"impar"
+      this.drawTiles(this.cant_py,px_fin,px_i,py_i,c,this.sprite_map.data[c]);//"par"
+      this.drawTiles(this.cant_py,px_fin,px_i+1,py_i,c,this.sprite_map.data[c]);//"impar"
     }
   }
 
@@ -133,7 +128,6 @@ class Tile{
 
     if (this.sprite == ''){
       this.sprite = this.escena.add.image(this.px,this.py, this.p.tile_den[this.tile[0]].den);
-      this.sprite.depth = this.py;
     }
 
     if(this.sprite != ''){
