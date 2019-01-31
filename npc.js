@@ -9,9 +9,10 @@ class NPC{
     this.px = 0;
     this.py = 0;
 
-    this.escena   = c.escena;
-    this.vel_desp = c.vel_desp;
-    this.mundo    = c.mundo;
+    this.escena    = c.escena;
+    this.vel_desp  = c.vel_desp;
+    this.mundo     = c.mundo;
+    this.alt_salto = 1;
 
     this.sprite = this.escena.add.image(this.px,this.py, 'point');
   }

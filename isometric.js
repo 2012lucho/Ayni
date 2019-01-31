@@ -29,11 +29,14 @@ class IsometricWorld{
     this.cam_py   = this.cant_py/4;
     this.cam_pz   = 0;
 
+    this.ct = 0;
+
     this.camera = this.escena.cameras.main;
     this.draw();
   }
 
   draw(){
+
     //se determina la cantidad de tiles que entran en la pantalla
     this.cant_py = Math.floor(this.screen_y/(this.config.tile_H * this.zoom/4));
     this.cant_px = Math.floor(this.screen_x/(this.config.tile_W * this.zoom/2));
@@ -48,11 +51,9 @@ class IsometricWorld{
     this.camera.scrollY = (px_i + dx + py_i + dy) * ((this.config.tile_H)/3.555) - this.cam_pz*((this.config.tile_H)/2.5) + this.cant_py * this.config.tile_W*this.zoom/7;
     this.camera.zoom    = this.zoom;
 
-    //Se dibujan todas las capas, empezando de la de mas abajo
-    for(let c=0;c<this.sprite_map.data.length; c++){
-      this.drawTiles(this.cant_py,px_fin,px_i,py_i,c,this.sprite_map.data[c]);//"par"
-      this.drawTiles(this.cant_py,px_fin,px_i+1,py_i,c,this.sprite_map.data[c]);//"impar"
-    }
+    //Se dibuja
+    this.drawTiles(this.cant_py,px_fin,px_i,py_i,0,this.sprite_map.data);//"par"
+    this.drawTiles(this.cant_py,px_fin,px_i+1,py_i,0,this.sprite_map.data);//"impar"
   }
 
   drawTiles(cant_py,px_fin,px_i,py_i,z,mapa){
@@ -63,8 +64,14 @@ class IsometricWorld{
         py += 1;
         if ( this.enMapa(px,py) ){
           //creamos un nuevo tile en caso que no exista
-          if(this.sprite_map.data[z][px][py][2] === -1){
-            this.sprite_map.data[z][px][py][2] = new Tile(this.escena,px,py,z,mapa[px][py],this);
+          if(this.sprite_map.data[px][py][2] === -1){
+            this.sprite_map.data[px][py][2] = new Tile(this.escena,px,py,z,this.sprite_map.data[px][py],this);
+            //si en esta posicion hay mas tiles, los recorremos
+            for (let c3=0; c3< this.sprite_map.data[px][py][3].length; c3++){
+              if (this.sprite_map.data[px][py][3][c3][2] === -1){
+                this.sprite_map.data[px][py][3][c3][2] = new Tile(this.escena,px,py,z,this.sprite_map.data[px][py][3][c3],this);
+              }
+            }
           }
         }
       }
@@ -133,7 +140,7 @@ class Tile{
     if(this.sprite != ''){
       this.sprite.x     = this.px;
       this.sprite.y     = this.py;
-      this.sprite.depth = this.py+this.py*this.z;
+      this.sprite.depth = this.z*this.p.config.sprite_img_W+this.py;
     }
   }
 
