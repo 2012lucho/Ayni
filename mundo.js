@@ -6,7 +6,8 @@ class Mundo{
       this.escena   = new Phaser.Scene(this.name);
       config.scene  = this.escena;
       this.mapa     = [];
-      this.tile_den = []
+      this.tile_den = [];
+      this.items    = [];
       this.preload();
     }
 
@@ -34,10 +35,12 @@ class Mundo{
         GM.generarTerreno();
         this.isometric = new IsometricWorld(e,'tiles', GM.getSubMapa(0,0,128,128), o.tile_den);
 
-        this.prota = new Jugador({ 'escena':e, 'vel_desp':1.235, 'mundo':this.isometric });
+        this.prota = new Jugador({ 'escena':e, 'vel_desp':0.235, 'mundo':this.isometric });
         this.prota.z = 1;
-        this.prota.x = 120;
-        this.prota.y = 120;
+        this.prota.x = 4;
+        this.prota.y = 4;
+
+        this.items = new Item();
       }
 
       this.escena.update = function(){

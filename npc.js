@@ -12,7 +12,7 @@ class NPC{
     this.escena    = c.escena;
     this.vel_desp  = c.vel_desp;
     this.mundo     = c.mundo;
-    this.alt_salto = 1;
+    this.altura    = 1;
 
     this.sprite = this.escena.add.image(this.px,this.py, 'point');
   }
@@ -23,6 +23,16 @@ class NPC{
     this.goPosition();
   }
 
+  avanzarX(c){
+    this.x += c;
+    this.mundo.update();
+  }
+
+  avanzarY(c){
+    this.y += c;
+    this.mundo.update();
+  }
+
   calcPosition(){
     this.px = (this.x - this.y) * ((128)/2);
     this.py = (this.x + this.y) * ((128)/3.555) - this.z*((128)/2.5);
@@ -31,10 +41,11 @@ class NPC{
   goPosition(){
     this.sprite.x     = this.px;
     this.sprite.y     = this.py;
-    this.sprite.depth = this.py+this.py*this.z;
+    this.sprite.depth = this.z*this.mundo.config.sprite_img_W+this.py;
   }
 
   corrigueLimites(){
+    //bordes del mapa
     if( this.x <= 0 ){ this.x = 0; }
     if( this.y <= 0 ){ this.y = 0; }
     if( this.x > this.mundo.sprite_map.config.tiles_x ){ this.x = this.mundo.sprite_map.config.tiles_x; }

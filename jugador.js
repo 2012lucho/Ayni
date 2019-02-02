@@ -2,31 +2,20 @@
 class Jugador extends NPC{
   constructor(c){
     super(c);
+    this.sigueCam();
   }
 
   update(e){
     super.update(e);
 
     let cursors = e.input.keyboard.createCursorKeys();
-    if (cursors.left.isDown){
-      this.x -= this.vel_desp;
-      this.mundo.update();
-    }
+    if (cursors.left.isDown){ this.avanzarX(-this.vel_desp); }
 
-    if (cursors.right.isDown){
-      this.x += this.vel_desp;
-      this.mundo.update();
-    }
+    if (cursors.right.isDown){ this.avanzarX(this.vel_desp); }
 
-    if (cursors.up.isDown ){
-      this.y -= this.vel_desp;
-      this.mundo.update();
-    }
+    if (cursors.up.isDown ){ this.avanzarY(-this.vel_desp); }
 
-    if (cursors.down.isDown ){
-      this.y += this.vel_desp;
-      this.mundo.update();
-    }
+    if (cursors.down.isDown ){ this.avanzarY(this.vel_desp); }
 
     this.sigueCam();
   }

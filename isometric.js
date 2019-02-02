@@ -28,6 +28,9 @@ class IsometricWorld{
     this.cam_px   = -this.cant_px*0.90;
     this.cam_py   = this.cant_py/4;
     this.cam_pz   = 0;
+    this.cam_alt  = 2;
+
+    this.interriorLimit = [];
 
     this.ct = 0;
 
@@ -64,20 +67,38 @@ class IsometricWorld{
         py += 1;
         if ( this.enMapa(px,py) ){
           //creamos un nuevo tile en caso que no exista
-          if(this.sprite_map.data[px][py][2] === -1){
-            this.sprite_map.data[px][py][2] = new Tile(this.escena,px,py,z,this.sprite_map.data[px][py],this);
-            //si en esta posicion hay mas tiles, los recorremos
-            for (let c3=0; c3< this.sprite_map.data[px][py][3].length; c3++){
-              if (this.sprite_map.data[px][py][3][c3][2] === -1){
-                this.sprite_map.data[px][py][3][c3][2] = new Tile(this.escena,px,py,z,this.sprite_map.data[px][py][3][c3],this);
-              }
-            }
+          if(this.sprite_map.data[px][py].tileObj === -1){
+            this.sprite_map.data[px][py].tileObj = new Tile(this.escena,px,py,z,this.sprite_map.data[px][py],this);
+            this.ct++;
           }
+          //si en esta posicion hay mas tiles, los recorremos
+          for (let c3=0; c3< this.sprite_map.data[px][py].tileCont.length; c3++){
+            if (this.sprite_map.data[px][py].tileCont[c3].tileObj === -1){
+              this.sprite_map.data[px][py].tileCont[c3].tileObj = new Tile(this.escena,px,py,z,this.sprite_map.data[px][py].tileCont[c3],this);
+              this.ct++;
+            }
+            //de acuerdo a la posicion de la camara se decide si el tile se muestra o no
+            // en caso de que este dentro de una construccion
+            this.sprite_map.data[px][py].tileCont[c3].tileObj.setVisible( !this.enConstruccion(this.sprite_map.data[px][py].tileCont[c3].z) );
+          }
+
         }
       }
       px_i += 1;
       py_i -= 1;
     }
+  }
+
+  enConstruccion(zt){
+    let x = Math.floor(this.cam_px+this.cant_px*0.90+1);
+    let y = Math.floor(this.cam_py-this.cant_py/4+1);
+    let z = Math.floor(this.cam_pz);
+
+    if (!this.enMapa(x,y)) { return false; }
+    if (this.sprite_map.data[x][y].construct == false){ return false;  }
+    if (this.sprite_map.data[x][y].construct.inLimits(x,y,z) && zt > this.cam_pz+this.cam_alt){  return true;   }
+
+    return false;
   }
 
   enMapa(px,py){
@@ -110,7 +131,7 @@ class Tile{
     this.sprite = '';
 
     if (this.tile.length != 0){
-      this.z += this.tile[1];
+      this.z += this.tile.z;
     }
     this.p.cant_t ++;
     this.draw();
@@ -134,13 +155,19 @@ class Tile{
     }
 
     if (this.sprite == ''){
-      this.sprite = this.escena.add.image(this.px,this.py, this.p.tile_den[this.tile[0]].den);
+      this.sprite = this.escena.add.image(this.px,this.py, this.p.tile_den[this.tile.img].den);
     }
 
     if(this.sprite != ''){
       this.sprite.x     = this.px;
       this.sprite.y     = this.py;
       this.sprite.depth = this.z*this.p.config.sprite_img_W+this.py;
+    }
+  }
+
+  setVisible(v){
+    if (this.sprite != ''){
+      this.sprite.visible = v;
     }
   }
 
