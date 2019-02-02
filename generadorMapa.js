@@ -20,10 +20,10 @@ class GeneradorMapa {
   generarLimites(){
     let alto = 5;
     for (let c1=1; c1<alto; c1++){
-        this.newLinea(c1, 1,1, 1,128 ,1, 1);
-        this.newLinea(c1, 1,1, 128,1 ,1, 1);
-        this.newLinea(c1, 127,1, 127,127 ,1, 1);
-        this.newLinea(c1, 1,127, 127,127 ,1, 1);
+        this.newLinea(c1, 1,1, 1,this.mapa.config.tiles_y ,1, 1);
+        this.newLinea(c1, 1,1, this.mapa.config.tiles_x,1 ,1, 1);
+        this.newLinea(c1, this.mapa.config.tiles_x,1, this.mapa.config.tiles_x,this.mapa.config.tiles_y ,1, 1);
+        this.newLinea(c1, 1,this.mapa.config.tiles_y, this.mapa.config.tiles_x,this.mapa.config.tiles_y ,1, 1);
     }
   }
 
@@ -163,37 +163,5 @@ class GeneradorMapa {
 
   getMapa(){
     return this.mapa;
-  }
-
-  getSubMapa(x,y,t_x,t_y){
-    return this.mapa;
-  }
-}
-
-class Mapa {
-  constructor(cfg){
-    this.config         = cfg;
-    this.data           = [];
-    this.construcciones = [];
-  }
-
-  registrarConstruc(c){
-    this.construcciones.push(c);
-
-    for (let x=c.constructLimits[0].xi; x<c.constructLimits[0].xf; x++){
-      for (let y=c.constructLimits[0].yi; y<c.constructLimits[0].yf; y++){
-        this.data[x][y].construct = c;
-      }
-    }
-  }
-}
-
-class MapTileData {
-  constructor(p){
-    this.img       = p.img;
-    this.z         = p.z;
-    this.tileObj   = p.tileObj;
-    this.tileCont  = p.tileCont;
-    this.construct = false;
   }
 }

@@ -27,15 +27,16 @@ class Mundo{
       let o = this;
       this.escena.create = function(){
         let mapConfig  = {
-          "tiles_x":128,
-          "tiles_y":128,
+          "tiles_x":640,
+          "tiles_y":640,
           "tiles_z":1,
+          "chunk_t":64
         };
         let GM         = new GeneradorMapa(mapConfig);
         GM.generarTerreno();
-        this.isometric = new IsometricWorld(e,'tiles', GM.getSubMapa(0,0,128,128), o.tile_den);
+        this.isometric = new IsometricWorld(e,'tiles', GM.getMapa(), o.tile_den);
 
-        this.prota = new Jugador({ 'escena':e, 'vel_desp':0.235, 'mundo':this.isometric });
+        this.prota = new Jugador({ 'escena':e, 'vel_desp':1.235, 'mundo':this.isometric });
         this.prota.z = 1;
         this.prota.x = 4;
         this.prota.y = 4;

@@ -35,14 +35,24 @@ class IsometricWorld{
     this.ct = 0;
 
     this.camera = this.escena.cameras.main;
+    this.chunk  = {
+      'cache':[ [[],[],[]], [[],[],[]], [[],[],[]] ],
+      'cache_ck':[ [{'x':-1,'y':-1},{'x':-1,'y':-1},{'x':-1,'y':-1}], [{'x':-1,'y':-1},{'x':-1,'y':-1},{'x':-1,'y':-1}], [{'x':-1,'y':-1},{'x':-1,'y':-1},{'x':-1,'y':-1}] ],
+      'ckX':0,'ckY':0, 'AX':0,'AY':0, 'xS':0,'yS':0, 'update':true
+    };
+
     this.draw();
   }
 
   draw(){
-
     //se determina la cantidad de tiles que entran en la pantalla
     this.cant_py = Math.floor(this.screen_y/(this.config.tile_H * this.zoom/4));
     this.cant_px = Math.floor(this.screen_x/(this.config.tile_W * this.zoom/2));
+
+    //se obtiene el chunk actual
+    this.chunk.ckX = ( this.cam_px+this.cant_px*0.90 )/this.sprite_map.config.chunk_t;
+    this.chunk.ckY = ( this.cam_py-this.cant_py/4    )/this.sprite_map.config.chunk_t;
+    this.updateChunkCache();
 
     //se determina la posicion inicial y final a "mapear"
     let px_i = Math.floor(this.cam_px); let px_fin = px_i + this.cant_py;
@@ -55,11 +65,40 @@ class IsometricWorld{
     this.camera.zoom    = this.zoom;
 
     //Se dibuja
-    this.drawTiles(this.cant_py,px_fin,px_i,py_i,0,this.sprite_map.data);//"par"
-    this.drawTiles(this.cant_py,px_fin,px_i+1,py_i,0,this.sprite_map.data);//"impar"
+    this.drawTiles(this.cant_py,px_fin,px_i,py_i,0);//"par"
+    this.drawTiles(this.cant_py,px_fin,px_i+1,py_i,0);//"impar"
   }
 
-  drawTiles(cant_py,px_fin,px_i,py_i,z,mapa){
+  updateChunkCache(){
+    let actualiza = false;
+    //se actualiza si en la cache la posicion actual no esta en el centro
+    if ( !(this.chunk.cache_ck[1][1].x == Math.floor(this.chunk.ckX) && this.chunk.cache_ck[1][1].y == Math.floor(this.chunk.ckY) ) ){
+      actualiza = true;
+    }
+
+    if (actualiza){
+      let x = Math.floor(this.chunk.ckX); let y = Math.floor(this.chunk.ckY);
+      if ( this.chunkInMapa(x-1,y-1) ) { this.chunk.cache[0][0] = this.sprite_map.getChunk( x-1 ,y-1 ); this.chunk.cache_ck[0][0] = {'x':x-1,'y':y-1}; }
+      if ( this.chunkInMapa(x  ,y-1) ) { this.chunk.cache[0][1] = this.sprite_map.getChunk( x   ,y-1 ); this.chunk.cache_ck[0][1] = {'x':x  ,'y':y-1}; }
+      if ( this.chunkInMapa(x+1,y-1) ) { this.chunk.cache[0][2] = this.sprite_map.getChunk( x+1 ,y-1 ); this.chunk.cache_ck[0][2] = {'x':x+1,'y':y-1}; }
+
+      if ( this.chunkInMapa(x-1,y  ) ) { this.chunk.cache[1][0] = this.sprite_map.getChunk( x-1 ,y );   this.chunk.cache_ck[1][0] = {'x':x-1,'y':y}; }
+      if ( this.chunkInMapa(x  ,y  ) ) { this.chunk.cache[1][1] = this.sprite_map.getChunk( x   ,y );   this.chunk.cache_ck[1][1] = {'x':x  ,'y':y}; }
+      if ( this.chunkInMapa(x+1,y  ) ) { this.chunk.cache[1][2] = this.sprite_map.getChunk( x+1 ,y );   this.chunk.cache_ck[1][2] = {'x':x+1,'y':y}; }
+
+      if ( this.chunkInMapa(x-1,y+1) ) { this.chunk.cache[2][0] = this.sprite_map.getChunk( x-1 ,y+1 ); this.chunk.cache_ck[2][0] = {'x':x-1,'y':y+1}; }
+      if ( this.chunkInMapa(x  ,y+1) ) { this.chunk.cache[2][1] = this.sprite_map.getChunk( x   ,y+1 ); this.chunk.cache_ck[2][1] = {'x':x  ,'y':y+1}; }
+      if ( this.chunkInMapa(x+1,y+1) ) { this.chunk.cache[2][2] = this.sprite_map.getChunk( x+1 ,y+1 ); this.chunk.cache_ck[2][2] = {'x':x+1,'y':y+1}; }
+      actualiza = false;
+    }
+  }
+
+  chunkInMapa(x,y){
+    if ( x < 0 || y < 0 || x > this.sprite_map.chunks.cantX || y > this.sprite_map.chunks.cantY ){ return false; }
+    return true;
+  }
+
+  drawTiles(cant_py,px_fin,px_i,py_i,z){
     //se agregan los tiles visibles
     for (let c1=0; c1<=cant_py; c1++){
       let py = py_i;
@@ -67,19 +106,19 @@ class IsometricWorld{
         py += 1;
         if ( this.enMapa(px,py) ){
           //creamos un nuevo tile en caso que no exista
-          if(this.sprite_map.data[px][py].tileObj === -1){
-            this.sprite_map.data[px][py].tileObj = new Tile(this.escena,px,py,z,this.sprite_map.data[px][py],this);
+          if(this.chunk.cache[1][1][px][py].tileObj === -1){
+            this.chunk.cache[1][1][px][py].tileObj = new Tile(this.escena,px,py,z,this.chunk.cache[1][1][px][py],this);
             this.ct++;
           }
           //si en esta posicion hay mas tiles, los recorremos
-          for (let c3=0; c3< this.sprite_map.data[px][py].tileCont.length; c3++){
-            if (this.sprite_map.data[px][py].tileCont[c3].tileObj === -1){
-              this.sprite_map.data[px][py].tileCont[c3].tileObj = new Tile(this.escena,px,py,z,this.sprite_map.data[px][py].tileCont[c3],this);
+          for (let c3=0; c3< this.chunk.cache[1][1][px][py].tileCont.length; c3++){
+            if (this.chunk.cache[1][1][px][py].tileCont[c3].tileObj === -1){
+              this.chunk.cache[1][1][px][py].tileCont[c3].tileObj = new Tile(this.escena,px,py,z,this.chunk.cache[1][1][px][py].tileCont[c3],this);
               this.ct++;
             }
             //de acuerdo a la posicion de la camara se decide si el tile se muestra o no
             // en caso de que este dentro de una construccion
-            this.sprite_map.data[px][py].tileCont[c3].tileObj.setVisible( !this.enConstruccion(this.sprite_map.data[px][py].tileCont[c3].z) );
+            this.chunk.cache[1][1][px][py].tileCont[c3].tileObj.setVisible( !this.enConstruccion(this.chunk.cache[1][1][px][py].tileCont[c3].z) );
           }
 
         }
@@ -95,14 +134,14 @@ class IsometricWorld{
     let z = Math.floor(this.cam_pz);
 
     if (!this.enMapa(x,y)) { return false; }
-    if (this.sprite_map.data[x][y].construct == false){ return false;  }
-    if (this.sprite_map.data[x][y].construct.inLimits(x,y,z) && zt > this.cam_pz+this.cam_alt){  return true;   }
+    if (this.chunk.cache[1][1][x][y].construct == false){ return false;  }
+    if (this.chunk.cache[1][1][x][y].construct.inLimits(x,y,z) && zt > this.cam_pz+this.cam_alt){  return true;   }
 
     return false;
   }
 
   enMapa(px,py){
-    if (px>0 && px<this.config.map_long_x && py>0 && py<this.config.map_long_y){
+    if (px>0 && px<this.sprite_map.config.chunk_t && py>0 && py<this.sprite_map.config.chunk_t){
       return true;
     }
     return false;
@@ -120,8 +159,8 @@ class IsometricWorld{
 class Tile{
   constructor(e,x,y,z,tile,c){
     this.escena = e;
-    this.x      = x;
-    this.y      = y;
+    this.x      = x+c.chunk.xS;
+    this.y      = y+c.chunk.yS;
     this.z      = z;
     this.tile   = tile;
     this.p      = c;
