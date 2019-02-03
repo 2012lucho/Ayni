@@ -21,6 +21,7 @@ class IsometricWorld{
     this.zoom     = 0.5;
 
     this.tiles   = [];
+    this.tileID  = 0;
     this.cant_t  = 0;
     this.cant_px = Math.floor(this.screen_x/(this.config.tile_W * this.zoom/2));
     this.cant_py = Math.floor(this.screen_y/(this.config.tile_H * this.zoom/4));
@@ -32,19 +33,18 @@ class IsometricWorld{
 
     this.interriorLimit = [];
 
-    this.ct = 0;
-
     this.camera = this.escena.cameras.main;
     this.chunk  = {
       'cache':[ [[],[],[]], [[],[],[]], [[],[],[]] ],
       'cache_ck':[ [{'x':-1,'y':-1},{'x':-1,'y':-1},{'x':-1,'y':-1}], [{'x':-1,'y':-1},{'x':-1,'y':-1},{'x':-1,'y':-1}], [{'x':-1,'y':-1},{'x':-1,'y':-1},{'x':-1,'y':-1}] ],
-      'ckX':0,'ckY':0, 'AX':0,'AY':0, 'xS':0,'yS':0, 'update':true
+      'ckX':0,'ckY':0,'update':true
     };
 
     this.draw();
   }
 
   draw(){
+
     //se determina la cantidad de tiles que entran en la pantalla
     this.cant_py = Math.floor(this.screen_y/(this.config.tile_H * this.zoom/4));
     this.cant_px = Math.floor(this.screen_x/(this.config.tile_W * this.zoom/2));
@@ -77,25 +77,59 @@ class IsometricWorld{
     }
 
     if (actualiza){
+      let ckc = this.chunk.cache_ck;
+      let ckh = this.chunk.cache;
+      //se limpia
+      console.log('a>'+this.cant_t);
+
+      for (let c=0; c<this.tiles.length; c++){
+          this.tiles[c].tileObj.destroy();
+          this.tiles[c].tileObj = -1;
+      }
+      this.tiles=[];
+      this.tileID=0;
+      console.log('d>'+this.cant_t);
+
+      //se actualiza
       let x = Math.floor(this.chunk.ckX); let y = Math.floor(this.chunk.ckY);
-      if ( this.chunkInMapa(x-1,y-1) ) { this.chunk.cache[0][0] = this.sprite_map.getChunk( x-1 ,y-1 ); this.chunk.cache_ck[0][0] = {'x':x-1,'y':y-1}; }
-      if ( this.chunkInMapa(x  ,y-1) ) { this.chunk.cache[0][1] = this.sprite_map.getChunk( x   ,y-1 ); this.chunk.cache_ck[0][1] = {'x':x  ,'y':y-1}; }
-      if ( this.chunkInMapa(x+1,y-1) ) { this.chunk.cache[0][2] = this.sprite_map.getChunk( x+1 ,y-1 ); this.chunk.cache_ck[0][2] = {'x':x+1,'y':y-1}; }
+      if ( this.chunkInMapa(x-1,y-1) ) { ckh[0][0] = this.sprite_map.getChunk( x-1 ,y-1 ); ckc[0][0] = {'x':x-1,'y':y-1}; }
+      if ( this.chunkInMapa(x  ,y-1) ) { ckh[0][1] = this.sprite_map.getChunk( x   ,y-1 ); ckc[0][1] = {'x':x  ,'y':y-1}; }
+      if ( this.chunkInMapa(x+1,y-1) ) { ckh[0][2] = this.sprite_map.getChunk( x+1 ,y-1 ); ckc[0][2] = {'x':x+1,'y':y-1}; }
 
-      if ( this.chunkInMapa(x-1,y  ) ) { this.chunk.cache[1][0] = this.sprite_map.getChunk( x-1 ,y );   this.chunk.cache_ck[1][0] = {'x':x-1,'y':y}; }
-      if ( this.chunkInMapa(x  ,y  ) ) { this.chunk.cache[1][1] = this.sprite_map.getChunk( x   ,y );   this.chunk.cache_ck[1][1] = {'x':x  ,'y':y}; }
-      if ( this.chunkInMapa(x+1,y  ) ) { this.chunk.cache[1][2] = this.sprite_map.getChunk( x+1 ,y );   this.chunk.cache_ck[1][2] = {'x':x+1,'y':y}; }
+      if ( this.chunkInMapa(x-1,y  ) ) { ckh[1][0] = this.sprite_map.getChunk( x-1 ,y );   ckc[1][0] = {'x':x-1,'y':y}; }
+      if ( this.chunkInMapa(x  ,y  ) ) { ckh[1][1] = this.sprite_map.getChunk( x   ,y );   ckc[1][1] = {'x':x  ,'y':y}; }
+      if ( this.chunkInMapa(x+1,y  ) ) { ckh[1][2] = this.sprite_map.getChunk( x+1 ,y );   ckc[1][2] = {'x':x+1,'y':y}; }
 
-      if ( this.chunkInMapa(x-1,y+1) ) { this.chunk.cache[2][0] = this.sprite_map.getChunk( x-1 ,y+1 ); this.chunk.cache_ck[2][0] = {'x':x-1,'y':y+1}; }
-      if ( this.chunkInMapa(x  ,y+1) ) { this.chunk.cache[2][1] = this.sprite_map.getChunk( x   ,y+1 ); this.chunk.cache_ck[2][1] = {'x':x  ,'y':y+1}; }
-      if ( this.chunkInMapa(x+1,y+1) ) { this.chunk.cache[2][2] = this.sprite_map.getChunk( x+1 ,y+1 ); this.chunk.cache_ck[2][2] = {'x':x+1,'y':y+1}; }
+      if ( this.chunkInMapa(x-1,y+1) ) { ckh[2][0] = this.sprite_map.getChunk( x-1 ,y+1 ); ckc[2][0] = {'x':x-1,'y':y+1}; }
+      if ( this.chunkInMapa(x  ,y+1) ) { ckh[2][1] = this.sprite_map.getChunk( x   ,y+1 ); ckc[2][1] = {'x':x  ,'y':y+1}; }
+      if ( this.chunkInMapa(x+1,y+1) ) { ckh[2][2] = this.sprite_map.getChunk( x+1 ,y+1 ); ckc[2][2] = {'x':x+1,'y':y+1}; }
       actualiza = false;
     }
   }
 
+  getTileData(x,y){
+    let ckc = this.chunk.cache_ck;
+
+    for (let c=0; c<ckc.length; c++){
+      for (let j=0; j<ckc[c].length; j++){
+        let x_i = ckc[c][j].x * this.sprite_map.config.chunk_t;
+        let y_i = ckc[c][j].y * this.sprite_map.config.chunk_t;
+        let x_l = x_i + this.sprite_map.config.chunk_t;
+        let y_l = y_i + this.sprite_map.config.chunk_t;
+
+        if (this.chunk.cache[c][j].length != 0 && x>x_i && y>y_i && x<=x_l && y<=y_l){
+          let px  = x%this.sprite_map.config.chunk_t;
+          let py  = y%this.sprite_map.config.chunk_t;
+          return this.chunk.cache[c][j][px][py];
+        }
+      }
+    }
+
+    return -1;
+  }
+
   chunkInMapa(x,y){
-    if ( x < 0 || y < 0 || x > this.sprite_map.chunks.cantX || y > this.sprite_map.chunks.cantY ){ return false; }
-    return true;
+    if ( x < 0 || y < 0 || x > this.sprite_map.chunks.cantX || y > this.sprite_map.chunks.cantY ){ return false; } return true;
   }
 
   drawTiles(cant_py,px_fin,px_i,py_i,z){
@@ -104,21 +138,24 @@ class IsometricWorld{
       let py = py_i;
       for (let px = px_i;px<=px_fin;px++){
         py += 1;
-        if ( this.enMapa(px,py) ){
+        let td = this.getTileData(px,py);
+        if ( td != -1 ){
           //creamos un nuevo tile en caso que no exista
-          if(this.chunk.cache[1][1][px][py].tileObj === -1){
-            this.chunk.cache[1][1][px][py].tileObj = new Tile(this.escena,px,py,z,this.chunk.cache[1][1][px][py],this);
-            this.ct++;
+          if(td.tileObj === -1){
+            td.tileObj = new Tile(this.escena,px,py,z,td,this);
+            this.tiles[this.tileID] = td;
+            this.tileID ++;
           }
           //si en esta posicion hay mas tiles, los recorremos
-          for (let c3=0; c3< this.chunk.cache[1][1][px][py].tileCont.length; c3++){
-            if (this.chunk.cache[1][1][px][py].tileCont[c3].tileObj === -1){
-              this.chunk.cache[1][1][px][py].tileCont[c3].tileObj = new Tile(this.escena,px,py,z,this.chunk.cache[1][1][px][py].tileCont[c3],this);
-              this.ct++;
+          for (let c3=0; c3< td.tileCont.length; c3++){
+            if (td.tileCont[c3].tileObj === -1){
+              td.tileCont[c3].tileObj = new Tile(this.escena,px,py,z,td.tileCont[c3],this);
+              this.tiles[this.tileID] = td.tileCont[c3];
+              this.tileID ++;
             }
             //de acuerdo a la posicion de la camara se decide si el tile se muestra o no
             // en caso de que este dentro de una construccion
-            this.chunk.cache[1][1][px][py].tileCont[c3].tileObj.setVisible( !this.enConstruccion(this.chunk.cache[1][1][px][py].tileCont[c3].z) );
+            td.tileCont[c3].tileObj.setVisible( !this.enConstruccion(td.tileCont[c3].z) );
           }
 
         }
@@ -133,9 +170,11 @@ class IsometricWorld{
     let y = Math.floor(this.cam_py-this.cant_py/4+1);
     let z = Math.floor(this.cam_pz);
 
-    if (!this.enMapa(x,y)) { return false; }
-    if (this.chunk.cache[1][1][x][y].construct == false){ return false;  }
-    if (this.chunk.cache[1][1][x][y].construct.inLimits(x,y,z) && zt > this.cam_pz+this.cam_alt){  return true;   }
+    let td = this.getTileData(x,y);
+    if (td == -1) { return false; }
+
+    if (td.construct == false){ return false;  }
+    if (td.construct.inLimits(x,y,z) && zt > this.cam_pz+this.cam_alt){  return true;   }
 
     return false;
   }
@@ -159,8 +198,8 @@ class IsometricWorld{
 class Tile{
   constructor(e,x,y,z,tile,c){
     this.escena = e;
-    this.x      = x+c.chunk.xS;
-    this.y      = y+c.chunk.yS;
+    this.x      = x;
+    this.y      = y;
     this.z      = z;
     this.tile   = tile;
     this.p      = c;
@@ -205,13 +244,13 @@ class Tile{
   }
 
   setVisible(v){
-    if (this.sprite != ''){
+    if (this.sprite){
       this.sprite.visible = v;
     }
   }
 
   destroy(){
-    if (this.sprite != ''){
+    if (this.sprite){
       this.sprite.destroy();
       this.sprite = undefined;
       this.p.cant_t --;
