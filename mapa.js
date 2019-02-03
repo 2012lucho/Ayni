@@ -40,5 +40,7 @@ class MapTileData {
     this.tileObj   = p.tileObj;
     this.tileCont  = p.tileCont;
     this.construct = false;
+    this.hole      = false;
+    if(p.hole){ this.hole = true; }
   }
 }

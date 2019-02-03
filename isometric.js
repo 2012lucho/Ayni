@@ -80,15 +80,12 @@ class IsometricWorld{
       let ckc = this.chunk.cache_ck;
       let ckh = this.chunk.cache;
       //se limpia
-      console.log('a>'+this.cant_t);
-
       for (let c=0; c<this.tiles.length; c++){
           this.tiles[c].tileObj.destroy();
           this.tiles[c].tileObj = -1;
       }
       this.tiles=[];
       this.tileID=0;
-      console.log('d>'+this.cant_t);
 
       //se actualiza
       let x = Math.floor(this.chunk.ckX); let y = Math.floor(this.chunk.ckY);
@@ -141,21 +138,21 @@ class IsometricWorld{
         let td = this.getTileData(px,py);
         if ( td != -1 ){
           //creamos un nuevo tile en caso que no exista
-          if(td.tileObj === -1){
+          if(td.tileObj === -1 && !td.hole){
             td.tileObj = new Tile(this.escena,px,py,z,td,this);
             this.tiles[this.tileID] = td;
             this.tileID ++;
           }
           //si en esta posicion hay mas tiles, los recorremos
           for (let c3=0; c3< td.tileCont.length; c3++){
-            if (td.tileCont[c3].tileObj === -1){
+            if (td.tileCont[c3].tileObj === -1 && !td.tileCont[c3].hole){
               td.tileCont[c3].tileObj = new Tile(this.escena,px,py,z,td.tileCont[c3],this);
               this.tiles[this.tileID] = td.tileCont[c3];
               this.tileID ++;
             }
             //de acuerdo a la posicion de la camara se decide si el tile se muestra o no
             // en caso de que este dentro de una construccion
-            td.tileCont[c3].tileObj.setVisible( !this.enConstruccion(td.tileCont[c3].z) );
+            if(!td.tileCont[c3].hole) { td.tileCont[c3].tileObj.setVisible( !this.enConstruccion(td.tileCont[c3].z) ); }
           }
 
         }
