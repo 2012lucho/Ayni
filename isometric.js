@@ -126,7 +126,7 @@ class IsometricWorld{
   }
 
   chunkInMapa(x,y){
-    if ( x < 0 || y < 0 || x > this.sprite_map.chunks.cantX || y > this.sprite_map.chunks.cantY ){ return false; } return true;
+    if ( x < 0 || y < 0 || x >= this.sprite_map.chunks.cantX || y >= this.sprite_map.chunks.cantY ){ return false; } return true;
   }
 
   drawTiles(cant_py,px_fin,px_i,py_i,z){

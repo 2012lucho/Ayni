@@ -9,9 +9,10 @@ class Construccion{
   }
 
   inLimits(x,y,z){
-    if (x > this.constructLimits[0].xi && x < this.constructLimits[0].xf &&
-        y > this.constructLimits[0].yi && y < this.constructLimits[0].yf ){ return true; }
-
+    for (let c=0;c<this.constructLimits.length; c++){
+      if (x > this.constructLimits[c].xi && x < this.constructLimits[c].xf &&
+          y > this.constructLimits[c].yi && y < this.constructLimits[c].yf ){ return true; }
+    }
     return false;
   }
 
@@ -36,8 +37,8 @@ class Room{
     let p = this.p;
     //piso y techo
     this.generator.newRect(0,   p.xi,p.yi, p.xf,p.yf, 10);
-    this.generator.newRect(p.h, p.xi,p.yi, p.xf,p.yf, 11);
-    for (let c=1;c<p.h+1;c++){
+    this.generator.newRect(p.h, p.xi-1,p.yi-1, p.xf+1,p.yf+1, 1);
+    for (let c=1;c<p.h;c++){
       //paredes
       this.generator.newLine(c, p.xi,p.yi, p.xf,p.yi ,1 ,3); this.generator.newLine(c, p.xi,p.yf, p.xf,p.yf ,1 ,8);
       this.generator.newLine(c, p.xi,p.yi, p.xi,p.yf ,1 ,2); this.generator.newLine(c, p.xf,p.yi, p.xf,p.yf ,1 ,6);
@@ -48,7 +49,7 @@ class Room{
   }
 
   getLimits(){
-    return {'xi':this.p.xi,'yi':this.p.yi, 'xf':this.p.xf,'yf':this.p.yf};
+    return {'xi':this.p.xi-1,'yi':this.p.yi-1, 'xf':this.p.xf+1,'yf':this.p.yf+1};
   }
 
   generateHoles(){

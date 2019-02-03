@@ -30,10 +30,12 @@ class GeneradorMapa {
   newEdificio(p){
     let c       = new Construccion();
     c.map       = this.mapa;
-    let r = new Room(this,{h:p.h, xi:p.x,yi:p.y, xf:p.x+10,yf:p.y+15});
-    r.addHole({zi:1,zf:3, xi:p.x+1,xf:p.x+3, yi:p.y-1,yf:p.y+1});
-    r.generator = this;
-    c.addRoom(r);
+    c.addRoom( new Room(this,{h:p.h, xi:p.x,yi:p.y, xf:p.x+16,yf:p.y+6}) );
+    c.addRoom( new Room(this,{h:p.h-2, xi:p.x+8,yi:p.y+7, xf:p.x+16,yf:p.y+16}) );
+    c.addRoom( new Room(this,{h:p.h-2, xi:p.x,yi:p.y+7, xf:p.x+4,yf:p.y+9}) );
+    c.addRoom( new Room(this,{h:p.h-2, xi:p.x+5,yi:p.y+7, xf:p.x+7,yf:p.y+9}) );
+    c.addRoom( new Room(this,{h:p.h-2, xi:p.x,yi:p.y+10, xf:p.x+7,yf:p.y+16}) );
+    //r.addHole({zi:1,zf:3, xi:p.x+1,xf:p.x+3, yi:p.y-1,yf:p.y+1});
     c.generate();
     this.mapa.registrarConstruc(c);
   }
@@ -47,61 +49,6 @@ class GeneradorMapa {
         this.newLine(pz, c,1, c,128 ,anc,1);
         this.newLine(pz, 1,c, 128,c ,anc,1);
     }
-  }
-
-  //generar fabrica
-  generarFabrica(x,y){
-    let c = new Construccion();
-    c.setLimits({'xi':x,'yi':y, 'xf':x+17,'yf':y+14});
-    this.mapa.registrarConstruc(c);
-
-    //techo
-    this.newRect(0, x,y ,x+17,y+14, 10);
-    //piso
-    this.newRect(6, x,y ,x+17,y+14, 11);
-
-    //pared sobre aperturas
-    this.newLine(5, x+1,y+13, x+16,y+13 ,1 ,8);
-    this.newLine(4, x+1,y+13, x+6,y+13 ,1 ,8);
-    for (let c=4;c<6;c++){
-      this.newLine(c, x+1,y+6, x+16,y+6 ,1 ,3);
-
-    }
-    //paredes
-    for (let c=1;c<6;c++){
-      //eje X
-      this.newLine(c, x,y, x,y ,1 ,4);
-
-      this.newLine(c, x+1,y, x+16,y ,1 ,3);this.newLine(c, x+16,y, x+16,y ,1 ,5);
-
-      this.newLine(c, x+6,y+6, x+6,y+6 ,1 ,3);
-      this.newLine(c, x+8,y+6, x+13,y+6 ,1 ,3);
-
-      this.newLine(c, x+1,y+9, x+6,y+9 ,1 ,3);this.newLine(c, x+8,y+9, x+8,y+9 ,1 ,3);
-      this.newLine(c, x+1,y+6, x+6,y+6 ,1 ,3);
-
-      this.newLine(c, x+1,y+13, x+3,y+13 ,1 ,8);
-      this.newLine(c, x+5,y+13, x+11,y+13 ,1 ,8);
-
-      this.newLine(c, x+15,y+13, x+15,y+13 ,1 ,8);
-      //Eje Y
-      this.newLine(c, x,y+1, x,y+13 ,1 ,2);
-      this.newLine(c, x+16,y+1, x+16,y+13 ,1 ,6);
-      this.newLine(c, x+9,y+7, x+9,y+13 ,1 ,2);
-
-      this.newLine(c, x+16,y+13, x+16,y+13 ,1 ,7);
-      this.newLine(c, x,y+13, x,y+13 ,1 ,9);
-
-      this.newLine(c, x,y+6, x,y+6 ,1 ,4);
-      this.newLine(c, x,y+9, x,y+9 ,1 ,4);
-      this.newLine(c, x+9,y+6, x+9,y+6 ,1 ,4);
-      this.newLine(c, x+16,y+6, x+16,y+6 ,1 ,5);
-      this.newLine(c, x+5,y+6, x+5,y+6 ,1 ,5);
-      this.newLine(c, x+5,y+8, x+5,y+8 ,1 ,7);
-      this.newLine(c, x+9,y+13, x+9,y+13 ,1 ,9);
-    }
-
-
   }
 
   newHoleCube(p){
@@ -195,7 +142,6 @@ class GeneradorMapa {
     this.generarPlanicie();
     this.generarCalles();
     this.generarLimites();
-    //this.generarFabrica(4,4);
     this.newEdificio({x:10,y:10,h:10});
   }
 

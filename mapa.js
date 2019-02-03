@@ -9,9 +9,11 @@ class Mapa {
   registrarConstruc(c){
     this.construcciones.push(c);
 
-    for (let x=c.constructLimits[0].xi; x<c.constructLimits[0].xf; x++){
-      for (let y=c.constructLimits[0].yi; y<c.constructLimits[0].yf; y++){
-        this.data[x][y].construct = c;
+    for (let i=0; i <c.constructLimits.length; i++){
+      for (let x=c.constructLimits[i].xi; x<c.constructLimits[i].xf; x++){
+        for (let y=c.constructLimits[i].yi; y<c.constructLimits[i].yf; y++){
+          this.data[x][y].construct = c;
+        }
       }
     }
   }
