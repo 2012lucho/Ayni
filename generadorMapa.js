@@ -28,14 +28,27 @@ class GeneradorMapa {
   }
 
   newEdificio(p){
-    let c       = new Construccion();
+    let c       = new Construccion(this);
     c.map       = this.mapa;
+    //habitaciones
     c.addRoom( new Room(this,{h:p.h, xi:p.x,yi:p.y, xf:p.x+16,yf:p.y+6}) );
     c.addRoom( new Room(this,{h:p.h-2, xi:p.x+8,yi:p.y+7, xf:p.x+16,yf:p.y+16}) );
     c.addRoom( new Room(this,{h:p.h-2, xi:p.x,yi:p.y+7, xf:p.x+4,yf:p.y+9}) );
     c.addRoom( new Room(this,{h:p.h-2, xi:p.x+5,yi:p.y+7, xf:p.x+7,yf:p.y+9}) );
     c.addRoom( new Room(this,{h:p.h-2, xi:p.x,yi:p.y+10, xf:p.x+7,yf:p.y+16}) );
-    //r.addHole({zi:1,zf:3, xi:p.x+1,xf:p.x+3, yi:p.y-1,yf:p.y+1});
+    //aberturas
+    c.addHole({zi:1,zf:6, xi:p.x+11,yi:p.y+16, xf:p.x+14,yf:p.y+16}); //puertas
+    c.addHole({zi:1,zf:4, xi:p.x+14,yi:p.y+6, xf:p.x+15,yf:p.y+7});
+    c.addHole({zi:1,zf:4, xi:p.x+5,yi:p.y+16, xf:p.x+6,yf:p.y+16});
+    c.addHole({zi:1,zf:4, xi:p.x+6,yi:p.y+6, xf:p.x+6,yf:p.y+7});
+    c.addHole({zi:1,zf:4, xi:p.x+6,yi:p.y+9, xf:p.x+6,yf:p.y+10});
+    c.addHole({zi:1,zf:4, xi:p.x+4,yi:p.y+8, xf:p.x+5,yf:p.y+8});
+    //ventanas
+    c.addHole({zi:7,zf:7, xi:p.x+16,yi:p.y+2, xf:p.x+16,yf:p.y+3});
+    c.addHole({zi:6,zf:6, xi:p.x+16,yi:p.y+9, xf:p.x+16,yf:p.y+10});
+    c.addHole({zi:6,zf:6, xi:p.x+16,yi:p.y+13, xf:p.x+16,yf:p.y+14});
+    c.addHole({zi:2,zf:4, xi:p.x+1,yi:p.y+16, xf:p.x+3,yf:p.y+16});
+
     c.generate();
     this.mapa.registrarConstruc(c);
   }
@@ -53,10 +66,11 @@ class GeneradorMapa {
 
   newHoleCube(p){
     let ls = 2000; //limite superficie
-    for (let x=p.xi; x<p.xf && ls>0; x++){
-      for(let y=p.yi; y<p.yf && ls>0; y++){
-        for (let z=p.zi; z<p.zf && ls>0; z++){
+    for (let x=p.xi; x<=p.xf && ls>0; x++){
+      for(let y=p.yi; y<=p.yf && ls>0; y++){
+        for (let z=p.zi; z<=p.zf && ls>0; z++){
           this.removeTile(x,y,z);
+          ls--;
         }
       }
     }

@@ -36,7 +36,7 @@ class Mundo{
         GM.generarTerreno();
         this.isometric = new IsometricWorld(e,'tiles', GM.getMapa(), o.tile_den);
 
-        this.prota = new Jugador({ 'escena':e, 'vel_desp':0.235, 'mundo':this.isometric });
+        this.prota = new Jugador({ 'escena':e, 'vel_desp':.5, 'mundo':this.isometric });
         this.prota.z = 1;
         this.prota.x = 4;
         this.prota.y = 4;

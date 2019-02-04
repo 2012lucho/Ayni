@@ -3,8 +3,8 @@ class NPC{
     this.vida  = 100;
     this.items = [];
 
-    this.x  = 0;
-    this.y  = 0;
+    this.x  = 15;
+    this.y  = 15;
     this.z  = 0;
     this.px = 0;
     this.py = 0;
@@ -23,14 +23,40 @@ class NPC{
     this.goPosition();
   }
 
+  positionPosible(x,y){
+    let px  = Math.floor(this.x); let py = Math.floor(this.y);
+    let p_a = this.mundo.getTileData( px,py );
+    let p_p = this.mundo.getTileData( px+Math.ceil(x),py+Math.ceil(y) );
+
+    if (p_p == -1 || p_a == -1) { return false; }
+    let d_z    = p_a.z - p_p.z; d_z = Math.sign(d_z)*d_z;
+
+    if (d_z > this.altura){ return false; } //desnivel en la base del terreno
+    if (p_p.tileCont.length == 0) { return true; }
+
+    let s  = false;
+    let s2 = true;
+    for (let c=0; c<p_p.tileCont.length; c++){
+      if (p_p.tileCont[c].hole && p_p.tileCont[c].z >= p_a.z && p_p.tileCont[c].z<= p_a.z+this.altura) { //si hay un hueco para pasar
+        s = true; }
+      if (p_p.tileCont[c].z > p_a.z+this.altura){ s2 = s2 && true; } else { s2 = false; }
+    }
+
+    return s || s2;
+  }
+
   avanzarX(c){
-    this.x += c;
-    this.mundo.update();
+    if (this.positionPosible(c,0) ){
+      this.x += c;
+      this.mundo.update();
+    }
   }
 
   avanzarY(c){
-    this.y += c;
-    this.mundo.update();
+    if (this.positionPosible(0,c) ){
+      this.y += c;
+      this.mundo.update();
+    }
   }
 
   calcPosition(){

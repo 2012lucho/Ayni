@@ -1,8 +1,10 @@
 class Construccion{
 
-  constructor(){
+  constructor(c){
     this.constructLimits = [];
     this.roomList        = [];
+    this.holesList       = [];
+    this.generator       = c;
   }
 
   setLimits(p){
@@ -20,23 +22,24 @@ class Construccion{
     //se generan todas las habitaciones
     for (let c=0; c<this.roomList.length; c++){ this.roomList[c].generate(); this.constructLimits.push(this.roomList[c].getLimits());  }
     //se generan todas las aberturas
-    for (let c=0; c<this.roomList.length; c++){ this.roomList[c].generateHoles(); }
+    this.generateHoles();
   }
 
-  addRoom(r){ this.roomList.push(r); }
+  addRoom(r){ this.roomList.push(r);  }
+  addHole(h){ this.holesList.push(h); }
+  generateHoles(){ for(let c=0; c<this.holesList.length; c++) { this.generator.newHoleCube(this.holesList[c]); } }
 }
 
 class Room{
   constructor(g,p){
       this.generator = g;
-      this.holesList = [];
       this.p         = p;
   }
 
   generate(){
     let p = this.p;
     //piso y techo
-    this.generator.newRect(0,   p.xi,p.yi, p.xf,p.yf, 10);
+    this.generator.newRect(0,   p.xi,p.yi, p.xf+1,p.yf+1, 10);
     this.generator.newRect(p.h, p.xi-1,p.yi-1, p.xf+1,p.yf+1, 1);
     for (let c=1;c<p.h;c++){
       //paredes
@@ -51,10 +54,4 @@ class Room{
   getLimits(){
     return {'xi':this.p.xi-1,'yi':this.p.yi-1, 'xf':this.p.xf+1,'yf':this.p.yf+1};
   }
-
-  generateHoles(){
-    for(let c=0; c<this.holesList.length; c++) { this.generator.newHoleCube(this.holesList[c]); }
-  }
-
-  addHole(h){ this.holesList.push(h); }
 }

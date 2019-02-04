@@ -105,6 +105,7 @@ class IsometricWorld{
   }
 
   getTileData(x,y){
+    if (!this.enMapa(x,y) ){ return -1;  }
     let ckc = this.chunk.cache_ck;
 
     for (let c=0; c<ckc.length; c++){
@@ -117,6 +118,7 @@ class IsometricWorld{
         if (this.chunk.cache[c][j].length != 0 && x>x_i && y>y_i && x<=x_l && y<=y_l){
           let px  = x%this.sprite_map.config.chunk_t;
           let py  = y%this.sprite_map.config.chunk_t;
+          if (!this.chunk.cache[c][j][px][py]) { return -1; }
           return this.chunk.cache[c][j][px][py];
         }
       }
@@ -177,7 +179,7 @@ class IsometricWorld{
   }
 
   enMapa(px,py){
-    if (px>0 && px<this.sprite_map.config.chunk_t && py>0 && py<this.sprite_map.config.chunk_t){
+    if (px>0 && px<this.sprite_map.config.tiles_x && py>0 && py<this.sprite_map.config.tiles_y){
       return true;
     }
     return false;
