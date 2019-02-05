@@ -1,5 +1,5 @@
 
-class Jugador extends NPC{
+class Jugador extends ISOEntity{
   constructor(c){
     super(c);
     this.sigueCam();

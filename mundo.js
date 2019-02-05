@@ -27,8 +27,8 @@ class Mundo{
       let o = this;
       this.escena.create = function(){
         let mapConfig  = {
-          "tiles_x":640,
-          "tiles_y":640,
+          "tiles_x":480,
+          "tiles_y":480,
           "tiles_z":1,
           "chunk_t":64
         };
@@ -36,12 +36,12 @@ class Mundo{
         GM.generarTerreno();
         this.isometric = new IsometricWorld(e,'tiles', GM.getMapa(), o.tile_den);
 
-        this.prota = new Jugador({ 'escena':e, 'vel_desp':.5, 'mundo':this.isometric });
+        this.prota = new Jugador({ 'escena':e, 'vel_desp':1.5678987654, 'mundo':this.isometric });
         this.prota.z = 1;
-        this.prota.x = 4;
-        this.prota.y = 4;
+        this.prota.x = 30;
+        this.prota.y = 30;
 
-        this.items = new Item();
+        this.items = new Item({ 'escena':e, 'mundo':this.isometric });
       }
 
       this.escena.update = function(){

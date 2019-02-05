@@ -34,20 +34,22 @@ class Room{
   constructor(g,p){
       this.generator = g;
       this.p         = p;
+      this.tint      = p.tint;
   }
 
   generate(){
     let p = this.p;
+    let tint = this.tint;
     //piso y techo
     this.generator.newRect(0,   p.xi,p.yi, p.xf+1,p.yf+1, 10);
     this.generator.newRect(p.h, p.xi-1,p.yi-1, p.xf+1,p.yf+1, 1);
     for (let c=1;c<p.h;c++){
       //paredes
-      this.generator.newLine(c, p.xi,p.yi, p.xf,p.yi ,1 ,3); this.generator.newLine(c, p.xi,p.yf, p.xf,p.yf ,1 ,8);
-      this.generator.newLine(c, p.xi,p.yi, p.xi,p.yf ,1 ,2); this.generator.newLine(c, p.xf,p.yi, p.xf,p.yf ,1 ,6);
+      this.generator.newLine(c, p.xi,p.yi, p.xf,p.yi ,1 ,3 ,{'tint':tint}); this.generator.newLine(c, p.xi,p.yf, p.xf,p.yf ,1 ,8 ,{'tint':tint});
+      this.generator.newLine(c, p.xi,p.yi, p.xi,p.yf ,1 ,2 ,{'tint':tint}); this.generator.newLine(c, p.xf,p.yi, p.xf,p.yf ,1 ,6 ,{'tint':tint});
       //esquineros
-      this.generator.newLine(c, p.xi,p.yi, p.xi,p.yi ,1 ,4); this.generator.newLine(c, p.xf,p.yi, p.xf,p.yi ,1 ,5);
-      this.generator.newLine(c, p.xi,p.yf, p.xi,p.yf ,1 ,9); this.generator.newLine(c, p.xf,p.yf, p.xf,p.yf ,1 ,7);
+      this.generator.newLine(c, p.xi,p.yi, p.xi,p.yi ,1 ,4 ,{'tint':tint}); this.generator.newLine(c, p.xf,p.yi, p.xf,p.yi ,1 ,5 ,{'tint':tint});
+      this.generator.newLine(c, p.xi,p.yf, p.xi,p.yf ,1 ,9 ,{'tint':tint}); this.generator.newLine(c, p.xf,p.yf, p.xf,p.yf ,1 ,7 ,{'tint':tint});
     }
   }
 

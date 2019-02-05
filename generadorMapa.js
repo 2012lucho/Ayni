@@ -11,7 +11,7 @@ class GeneradorMapa {
       this.mapa.data.push([]);
       for (let py=0;py<this.config.tiles_y;py++){
         this.mapa.data[px].push([]);
-        this.mapa.data[px][py] = new MapTileData({ 'img':0, 'z':0, 'tileObj':-1, 'tileCont':[] });
+        this.mapa.data[px][py] = new MapTileData({ 'img':0, 'z':0, 'tileObj':-1, 'tileCont':[], 'tint':-1 });
       }
     }
   }
@@ -20,22 +20,23 @@ class GeneradorMapa {
   generarLimites(){
     let alto = 5;
     for (let c1=1; c1<alto; c1++){
-        this.newLine(c1, 1,1, 1,this.mapa.config.tiles_y ,1, 1);
-        this.newLine(c1, 1,1, this.mapa.config.tiles_x,1 ,1, 1);
-        this.newLine(c1, this.mapa.config.tiles_x,1, this.mapa.config.tiles_x,this.mapa.config.tiles_y ,1, 1);
-        this.newLine(c1, 1,this.mapa.config.tiles_y, this.mapa.config.tiles_x,this.mapa.config.tiles_y ,1, 1);
+        this.newLine(c1, 0,0, 0,this.mapa.config.tiles_y ,1, 1);
+        this.newLine(c1, 0,0, this.mapa.config.tiles_x,0 ,1, 1);
+        this.newLine(c1, this.mapa.config.tiles_x,0, this.mapa.config.tiles_x,this.mapa.config.tiles_y ,1, 1);
+        this.newLine(c1, 0,this.mapa.config.tiles_y, this.mapa.config.tiles_x,this.mapa.config.tiles_y ,1, 1);
     }
   }
 
   newEdificio(p){
-    let c       = new Construccion(this);
-    c.map       = this.mapa;
+    let c = new Construccion(this);
+    c.map = this.mapa;
+    let t = 0xAAF0AA;
     //habitaciones
-    c.addRoom( new Room(this,{h:p.h, xi:p.x,yi:p.y, xf:p.x+16,yf:p.y+6}) );
-    c.addRoom( new Room(this,{h:p.h-2, xi:p.x+8,yi:p.y+7, xf:p.x+16,yf:p.y+16}) );
-    c.addRoom( new Room(this,{h:p.h-2, xi:p.x,yi:p.y+7, xf:p.x+4,yf:p.y+9}) );
-    c.addRoom( new Room(this,{h:p.h-2, xi:p.x+5,yi:p.y+7, xf:p.x+7,yf:p.y+9}) );
-    c.addRoom( new Room(this,{h:p.h-2, xi:p.x,yi:p.y+10, xf:p.x+7,yf:p.y+16}) );
+    c.addRoom( new Room(this,{h:p.h,   xi:p.x   ,yi:p.y,    xf:p.x+16, yf:p.y+6   ,tint:t}) );
+    c.addRoom( new Room(this,{h:p.h-2, xi:p.x+8 ,yi:p.y+7,  xf:p.x+16, yf:p.y+16  ,tint:t}) );
+    c.addRoom( new Room(this,{h:p.h-2, xi:p.x   ,yi:p.y+7,  xf:p.x+4,  yf:p.y+9   ,tint:t}) );
+    c.addRoom( new Room(this,{h:p.h-2, xi:p.x+5 ,yi:p.y+7,  xf:p.x+7,  yf:p.y+9   ,tint:t}) );
+    c.addRoom( new Room(this,{h:p.h-2, xi:p.x   ,yi:p.y+10, xf:p.x+7,  yf:p.y+16  ,tint:t}) );
     //aberturas
     c.addHole({zi:1,zf:6, xi:p.x+11,yi:p.y+16, xf:p.x+14,yf:p.y+16}); //puertas
     c.addHole({zi:1,zf:4, xi:p.x+14,yi:p.y+6, xf:p.x+15,yf:p.y+7});
@@ -64,6 +65,11 @@ class GeneradorMapa {
     }
   }
 
+  getRandPaintColor(){
+    let c = 0xAAFFAA;
+    return c;
+  }
+
   newHoleCube(p){
     let ls = 2000; //limite superficie
     for (let x=p.xi; x<=p.xf && ls>0; x++){
@@ -76,16 +82,16 @@ class GeneradorMapa {
     }
   }
 
-  newRect(z, x_i,y_i, x_f,y_f, t){
+  newRect(z, x_i,y_i, x_f,y_f, t, p=-1){
     let i_x = 1; let i_y = 1;
     if (x_i > x_f ) { i_x=-1; }
     if (y_i > y_f ) { i_y=-1; }
-    let tc =0;
+    let tc =10000;
 
-    for (let x=x_i;x != x_f  && tc<2000; x+=i_x){
-        for( let y=y_i; y != y_f && tc<2000; y+=i_y){
-            this.insertaBloque(x,y,z,t);
-            tc++;
+    for (let x=x_i;x != x_f  && tc>0; x+=i_x){
+        for( let y=y_i; y != y_f && tc>0; y+=i_y){
+            this.insertaBloque(x,y,z,t,p);
+            tc--;
         }
     }
   }
@@ -100,32 +106,38 @@ class GeneradorMapa {
     }
   }
 
-  insertaBloque(x,y,z,t){
+  insertaBloque(x,y,z,t,p=-1){
+    let tint =-1; if(p!=-1 && p.tint){ tint = p.tint; }
     if (this.enMapa(z,Math.ceil(x), Math.ceil(y) )){
-      if (z==0){
+      if (z<1){
         let dCT = this.mapa.data[Math.ceil(x)][Math.ceil(y)].construct;
         if(this.mapa.data[Math.ceil(x)][Math.ceil(y)].tileObj != -1){
           this.mapa.data[Math.ceil(x)][Math.ceil(y)].tileObj.destroy();
         }
-        this.mapa.data[Math.ceil(x)][Math.ceil(y)] = new MapTileData({ 'img':t, 'z':z, 'tileObj':-1, 'tileCont':[] });
+        this.mapa.data[Math.ceil(x)][Math.ceil(y)] = new MapTileData({ 'img':t, 'z':z, 'tileObj':-1, 'tileCont':[],'tint':-1 });
+        if (tint != -1) { this.mapa.data[Math.ceil(x)][Math.ceil(y)].tint = tint; }
         this.mapa.data[Math.ceil(x)][Math.ceil(y)].construct = dCT; //que no se pierdan los datos del tile
       } else {
         //si hay algunn bloque en la misma posicion z, lo reemplazamos
         let encontrado = false;
-        for (let c=0; c<this.mapa.data[Math.ceil(x)][Math.ceil(y)].tileObj.length; c++){
-          if ( this.mapa.data[Math.ceil(x)][Math.ceil(y)].tileObj[c].z == z ){
-            if(this.mapa.data[Math.ceil(x)][Math.ceil(y)].tileObj[c].tileObj != -1){
-              this.mapa.data[Math.ceil(x)][Math.ceil(y)].tileObj[c].tileObj.destroy();
-              this.mapa.data[Math.ceil(x)][Math.ceil(y)].tileObj[c] = new MapTileData({ 'img':t, 'z':z, 'tileObj':-1, 'tileCont':[] });
+        for (let c=0; c<this.mapa.data[Math.ceil(x)][Math.ceil(y)].tileCont.length; c++){
+          if ( this.mapa.data[Math.ceil(x)][Math.ceil(y)].tileCont[c].z == z ){
+            if(this.mapa.data[Math.ceil(x)][Math.ceil(y)].tileCont[c].tileObj != -1){
+              this.mapa.data[Math.ceil(x)][Math.ceil(y)].tileCont[c].tileObj.destroy();
+              this.mapa.data[Math.ceil(x)][Math.ceil(y)].tileCont[c] = new MapTileData({ 'img':t, 'z':z, 'tileObj':-1, 'tileCont':[], 'tint':-1 });
+              if (tint != -1) { this.mapa.data[Math.ceil(x)][Math.ceil(y)].tileCont[c].tint = tint; }
             }
           }
         }
-        if (!encontrado) { this.mapa.data[Math.ceil(x)][Math.ceil(y)].tileCont.push( new MapTileData({ 'img':t, 'z':z, 'tileObj':-1, 'tileCont':[] }) ); }
+        if (!encontrado) {
+          let i = new MapTileData({ 'img':t, 'z':z, 'tileObj':-1, 'tileCont':[], 'tint':-1 });
+          if (tint != -1) { i.tint = tint; }
+          this.mapa.data[Math.ceil(x)][Math.ceil(y)].tileCont.push( i ); }
       }
     }
   }
 
-  newLine(z,x_i,y_i,x_f,y_f,anc,t){
+  newLine(z,x_i,y_i,x_f,y_f,anc,t,p=-1){
     let a_x,a_y = false;
     let x = x_i;
     let y = y_i;
@@ -133,7 +145,7 @@ class GeneradorMapa {
 
       for (let c=0; c<anc;c++){
         if (this.enMapa(z,Math.ceil(x+c), Math.ceil(y-c) )){
-          this.insertaBloque(x,y,z,t);
+          this.insertaBloque(x,y,z,t,p);
         }
       }
       if ( x < x_f  ) { x++; }
@@ -152,11 +164,45 @@ class GeneradorMapa {
     return true;
   }
 
+  generarManzana(ox,oy, lx,ly, p=-1){
+    let cant_t   = 60;
+    let c_m_anch = 3;
+    let px_i = ox*(cant_t);        let py_i = oy*(cant_t);
+    let px_f = ox*(cant_t)+cant_t; let py_f = oy*(cant_t)+cant_t;
+    //piso
+    this.newRect(0, px_i,py_i, px_f,py_f,  12,p);
+    //calle
+    this.newRect(0, px_i,py_i, px_f,py_i+c_m_anch, 13);
+    this.newRect(0, px_i,py_f-c_m_anch, px_f,py_f, 13);
+    this.newRect(0, px_i,py_i, px_i+c_m_anch,py_f, 13);
+    this.newRect(0, px_f-c_m_anch,py_i, px_f,py_f, 13);
+    //sobreescribir vereda
+    this.newRect(0, px_i+c_m_anch*3,py_i+c_m_anch*3, px_f-c_m_anch*3,py_f-c_m_anch*3,  13,p);
+  }
+
   generarTerreno(){
     this.generarPlanicie();
-    this.generarCalles();
+    //se generan las zonas con sus respectivas misiones
+    let misiones = [];
+  /*  misiones.push(new Mission({ colorID:0xFF4E00 }));
+    misiones.push(new Mission({ colorID:0x008080 }));
+    misiones.push(new Mission({ colorID:0x668000 }));*/
+    misiones.push(new Mission({ colorID:0xCCFF00 }));
+  /*  misiones.push(new Mission({ colorID:0x1A1A1A }));
+    misiones.push(new Mission({ colorID:0x0044AA }));
+    misiones.push(new Mission({ colorID:0x9b9692 }));
+    misiones.push(new Mission({ colorID:0x00a457 }));
+    misiones.push(new Mission({ colorID:0xffb100 }));*/
+
+    //se generan las manzanas
+    for (let c=0;c<8;c++){
+      for(let j=0;j<8;j++){
+          this.generarManzana(c,j,1,1,{tint:misiones[Math.floor((Math.random() * misiones.length))].getColorID() });
+      }
+    }
+
     this.generarLimites();
-    this.newEdificio({x:10,y:10,h:10});
+    this.newEdificio({x:10,y:10,h:9});
   }
 
   getMapa(){
