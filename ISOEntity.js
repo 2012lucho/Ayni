@@ -14,6 +14,8 @@ class ISOEntity{
     this.mundo     = c.mundo;
     this.altura    = 1;
 
+    this.px_dest   = -1; this.py_dest = -1;
+
     this.sprite = this.escena.add.image(this.px,this.py, 'point');
   }
 
@@ -66,9 +68,10 @@ class ISOEntity{
 
   getMapCoords(x,y){
     let s  = {x:0,y:0};
-    //let xc =
-    s.x = this.mundo.cam_px+y/(this.mundo.config.tile_H*this.mundo.zoom)/2;//+ ;
-    s.y = this.mundo.cam_py+x/(this.mundo.config.tile_W*this.mundo.zoom)/2;//   + y/this.mundo.config.tile_H/3.555;
+    let mdCX = Math.ceil( ( x*this.mundo.screen_sc - this.mundo.screen_x/2 )/(this.mundo.config.tile_W*this.mundo.screen_sc) );
+    let mdCY = Math.ceil( ( y*this.mundo.screen_sc - this.mundo.screen_y/2 )/(this.mundo.config.tile_H*this.mundo.screen_sc) );
+    s.x = this.x + mdCX + mdCY;
+    s.y = this.y - mdCX + mdCY;
     return s;
   }
 

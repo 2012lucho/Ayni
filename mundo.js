@@ -39,6 +39,7 @@ class Mundo{
 
       this.escena.create = function(){
         this.input.setDefaultCursor('url(./img/point.png), pointer');
+        this.input.addPointer(1);
 
         let mapConfig  = {
           "tiles_x":480,

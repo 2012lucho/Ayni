@@ -14,8 +14,9 @@ class IsometricWorld{
       "map_long_y": m.config.tiles_y,
     };
 
-    this.screen_x = es.config.scale.width;
-    this.screen_y = es.config.scale.height;
+    this.screen_x  = es.config.scale.width;
+    this.screen_y  = es.config.scale.height;
+    this.screen_sc = es.config.scale.app_scale;
     this.zoom     = 0.5;
 
     this.tiles   = [];
