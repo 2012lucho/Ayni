@@ -22,8 +22,8 @@ class GeneradorMapa {
     for (let c1=1; c1<alto; c1++){
         this.newLine(c1, 0,0, 0,this.mapa.config.tiles_y ,1, 1);
         this.newLine(c1, 0,0, this.mapa.config.tiles_x,0 ,1, 1);
-        this.newLine(c1, this.mapa.config.tiles_x,0, this.mapa.config.tiles_x,this.mapa.config.tiles_y ,1, 1);
-        this.newLine(c1, 0,this.mapa.config.tiles_y, this.mapa.config.tiles_x,this.mapa.config.tiles_y ,1, 1);
+        this.newLine(c1, this.mapa.config.tiles_x-1,this.mapa.config.tiles_y-1, 0,this.mapa.config.tiles_y ,1, 1);
+        this.newLine(c1, this.mapa.config.tiles_x-1,this.mapa.config.tiles_y-1, this.mapa.config.tiles_x,0 ,1, 1);
     }
   }
 
@@ -52,17 +52,6 @@ class GeneradorMapa {
 
     c.generate();
     this.mapa.registrarConstruc(c);
-  }
-
-  //por ahora se genera una grilla
-  generarCalles(){
-    let sep = 40;
-    let anc = 4;
-    let pz  = 0;
-    for(let c =1;c<this.config.tiles_x; c+=sep){
-        this.newLine(pz, c,1, c,128 ,anc,1);
-        this.newLine(pz, 1,c, 128,c ,anc,1);
-    }
   }
 
   getRandPaintColor(){
@@ -165,6 +154,10 @@ class GeneradorMapa {
   }
 
   generarManzana(ox,oy, lx,ly, p=-1){
+    if (p!=-1){
+      p.tint = p.mision.getColorID();
+    }
+
     let cant_t   = 60;
     let c_m_anch = 3;
     let px_i = ox*(cant_t);        let py_i = oy*(cant_t);
@@ -180,24 +173,13 @@ class GeneradorMapa {
     this.newRect(0, px_i+c_m_anch*3,py_i+c_m_anch*3, px_f-c_m_anch*3,py_f-c_m_anch*3,  13,p);
   }
 
-  generarTerreno(){
+  generarTerreno(misiones){
     this.generarPlanicie();
-    //se generan las zonas con sus respectivas misiones
-    let misiones = [];
-  /*  misiones.push(new Mission({ colorID:0xFF4E00 }));
-    misiones.push(new Mission({ colorID:0x008080 }));
-    misiones.push(new Mission({ colorID:0x668000 }));*/
-    misiones.push(new Mission({ colorID:0xCCFF00 }));
-  /*  misiones.push(new Mission({ colorID:0x1A1A1A }));
-    misiones.push(new Mission({ colorID:0x0044AA }));
-    misiones.push(new Mission({ colorID:0x9b9692 }));
-    misiones.push(new Mission({ colorID:0x00a457 }));
-    misiones.push(new Mission({ colorID:0xffb100 }));*/
-
     //se generan las manzanas
     for (let c=0;c<8;c++){
       for(let j=0;j<8;j++){
-          this.generarManzana(c,j,1,1,{tint:misiones[Math.floor((Math.random() * misiones.length))].getColorID() });
+          let mision = misiones[Math.floor((Math.random() * misiones.length))];
+          this.generarManzana(c,j,1,1,{'mision':mision });
       }
     }
 

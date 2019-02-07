@@ -24,9 +24,9 @@ class Mapa {
     let px_i = x*this.config.chunk_t;
     let py_i = y*this.config.chunk_t;
 
-    for (let px=0;px<this.config.chunk_t; px++ ){
+    for (let px=0;px<this.config.chunk_t && (px+px_i) < this.config.tiles_x; px++ ){
       chunk.push([]);
-      for (let py=0; py < this.config.chunk_t;py++ ){
+      for (let py=0; py < this.config.chunk_t && (py+py_i) < this.config.tiles_y;py++ ){
         chunk[px].push([]);
         chunk[px][py] = this.data[px+px_i][py+py_i];
       }

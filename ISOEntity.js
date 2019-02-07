@@ -60,14 +60,22 @@ class ISOEntity{
   }
 
   calcPosition(){
-    this.px = (this.x - this.y) * ((128)/2);
-    this.py = (this.x + this.y) * ((128)/3.555) - this.z*((128)/2.5);
+    this.px = (this.x - this.y) * ((this.mundo.config.tile_W)/2);
+    this.py = (this.x + this.y) * ((this.mundo.config.tile_H)/3.555) - this.z*((this.mundo.config.tile_H)/2.5);
+  }
+
+  getMapCoords(x,y){
+    let s  = {x:0,y:0};
+    //let xc =
+    s.x = this.mundo.cam_px+y/(this.mundo.config.tile_H*this.mundo.zoom)/2;//+ ;
+    s.y = this.mundo.cam_py+x/(this.mundo.config.tile_W*this.mundo.zoom)/2;//   + y/this.mundo.config.tile_H/3.555;
+    return s;
   }
 
   goPosition(){
     this.sprite.x     = this.px;
     this.sprite.y     = this.py;
-    this.sprite.depth = this.z*this.mundo.config.sprite_img_W+this.py;
+    this.sprite.depth = this.z*this.mundo.screen_y+this.py;
   }
 
   corrigueLimites(){

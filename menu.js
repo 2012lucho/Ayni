@@ -5,7 +5,6 @@ class Menu{
       this.config  = config;
       this.escena  = new Phaser.Scene(this.name);
       config.scene = this.escena;
-
       this.preload();
     }
 

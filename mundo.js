@@ -25,7 +25,21 @@ class Mundo{
     start(){
       let e = this.escena;
       let o = this;
+
+      let misiones = [];
+      misiones.push(new Mission({ colorID:0xFF4E00 }));
+      misiones.push(new Mission({ colorID:0x008080 }));
+      misiones.push(new Mission({ colorID:0x668000 }));
+      misiones.push(new Mission({ colorID:0xCCFF00 }));
+      misiones.push(new Mission({ colorID:0x1A1A1A }));
+      misiones.push(new Mission({ colorID:0x0044AA }));
+      misiones.push(new Mission({ colorID:0x9b9692 }));
+      misiones.push(new Mission({ colorID:0x00a457 }));
+      misiones.push(new Mission({ colorID:0xffb100 }));
+
       this.escena.create = function(){
+        this.input.setDefaultCursor('url(./img/point.png), pointer');
+
         let mapConfig  = {
           "tiles_x":480,
           "tiles_y":480,
@@ -33,13 +47,13 @@ class Mundo{
           "chunk_t":64
         };
         let GM         = new GeneradorMapa(mapConfig);
-        GM.generarTerreno();
-        this.isometric = new IsometricWorld(e,'tiles', GM.getMapa(), o.tile_den);
+        GM.generarTerreno(misiones);
+        this.isometric = new IsometricWorld(e,'tiles', GM.getMapa(), o.tile_den, o);
 
-        this.prota = new Jugador({ 'escena':e, 'vel_desp':1.5678987654, 'mundo':this.isometric });
+        this.prota = new Jugador({ 'escena':e, 'vel_desp':1.275, 'mundo':this.isometric });
         this.prota.z = 1;
-        this.prota.x = 30;
-        this.prota.y = 30;
+        this.prota.x = 2;
+        this.prota.y = 2;
 
         this.items = new Item({ 'escena':e, 'mundo':this.isometric });
       }

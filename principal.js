@@ -1,10 +1,17 @@
 
 class Juego{
   constructor(){
+    this.vp = {'w':window.innerWidth,'h':window.innerHeight,'sc':0.5};
     this.config = {
       type: Phaser.AUTO,
-      width: 1024,
-      height: 768,
+      scale: {
+        mode: Phaser.Scale.FIT,
+        parent: 'phaser-example',
+        autoCenter: 1,
+        width: this.vp.w*this.vp.sc,
+        height: this.vp.h*this.vp.sc,
+        app_scale:this.vp.sc
+      },
       scene: '',
       pixelArt: true,
     }
