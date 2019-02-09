@@ -5,6 +5,7 @@ class IsometricWorld{
     this.sprite_img = i;
     this.sprite_map = m;
     this.tile_den   = td;
+    this.mundo      = es;
 
     this.config = {
       "tile_W": 64,
@@ -17,7 +18,7 @@ class IsometricWorld{
     this.screen_x  = es.config.scale.width;
     this.screen_y  = es.config.scale.height;
     this.screen_sc = es.config.scale.app_scale;
-    this.zoom     = 0.5;
+    this.zoom      = es.config.scale.app_scale;
 
     this.tiles   = [];
     this.tileID  = 0;
@@ -157,7 +158,10 @@ class IsometricWorld{
             // en caso de que este dentro de una construccion
             if(!td.tileCont[c3].hole) { td.tileCont[c3].tileObj.setVisible( !this.enConstruccion(td.tileCont[c3].z) ); }
           }
-
+          //obtenemos los datos de la zona en la que se esta parado
+          if ( Math.floor(px)==Math.floor(this.cam_px) && Math.floor(py)==Math.floor(this.cam_py)){
+            this.mundo.setMissionInfo(td.mission);
+          }
         }
       }
       px_i += 1;

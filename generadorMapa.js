@@ -11,7 +11,7 @@ class GeneradorMapa {
       this.mapa.data.push([]);
       for (let py=0;py<this.config.tiles_y;py++){
         this.mapa.data[px].push([]);
-        this.mapa.data[px][py] = new MapTileData({ 'img':0, 'z':0, 'tileObj':-1, 'tileCont':[], 'tint':-1 });
+        this.mapa.data[px][py] = new MapTileData({ 'img':0, 'z':0, 'tileObj':-1, 'tileCont':[], 'tint':-1, 'mission':-1 });
       }
     }
   }
@@ -30,7 +30,7 @@ class GeneradorMapa {
   newEdificio(p){
     let c = new Construccion(this);
     c.map = this.mapa;
-    let t = 0xAAF0AA;
+    let t = p.tint;
     //habitaciones
     c.addRoom( new Room(this,{h:p.h,   xi:p.x   ,yi:p.y,    xf:p.x+16, yf:p.y+6   ,tint:t}) );
     c.addRoom( new Room(this,{h:p.h-2, xi:p.x+8 ,yi:p.y+7,  xf:p.x+16, yf:p.y+16  ,tint:t}) );
@@ -90,20 +90,22 @@ class GeneradorMapa {
     let arrT = this.mapa.data[Math.ceil(x)][Math.ceil(y)].tileCont;
     for (let c=0; c<arrT.length; c++){
       if ( arrT[c].z == z ){
-        arrT[c] = new MapTileData({ 'hole':true, 'img':-1, 'z':z, 'tileObj':1, 'tileCont':[] });
+        arrT[c] = new MapTileData({ 'hole':true, 'img':-1, 'z':z, 'tileObj':1, 'tileCont':[],'mission':-1 });
       }
     }
   }
 
   insertaBloque(x,y,z,t,p=-1){
-    let tint =-1; if(p!=-1 && p.tint){ tint = p.tint; }
+    let tint     =-1; if(p!=-1 && p.tint)   { tint     = p.tint; }
+    let missionD =-1; if(p!=-1 && p.mission){ missionD = p.mission; }
+
     if (this.enMapa(z,Math.ceil(x), Math.ceil(y) )){
       if (z<1){
         let dCT = this.mapa.data[Math.ceil(x)][Math.ceil(y)].construct;
         if(this.mapa.data[Math.ceil(x)][Math.ceil(y)].tileObj != -1){
           this.mapa.data[Math.ceil(x)][Math.ceil(y)].tileObj.destroy();
         }
-        this.mapa.data[Math.ceil(x)][Math.ceil(y)] = new MapTileData({ 'img':t, 'z':z, 'tileObj':-1, 'tileCont':[],'tint':-1 });
+        this.mapa.data[Math.ceil(x)][Math.ceil(y)] = new MapTileData({ 'img':t, 'z':z, 'tileObj':-1, 'tileCont':[],'tint':-1, 'mission':missionD });
         if (tint != -1) { this.mapa.data[Math.ceil(x)][Math.ceil(y)].tint = tint; }
         this.mapa.data[Math.ceil(x)][Math.ceil(y)].construct = dCT; //que no se pierdan los datos del tile
       } else {
@@ -113,13 +115,13 @@ class GeneradorMapa {
           if ( this.mapa.data[Math.ceil(x)][Math.ceil(y)].tileCont[c].z == z ){
             if(this.mapa.data[Math.ceil(x)][Math.ceil(y)].tileCont[c].tileObj != -1){
               this.mapa.data[Math.ceil(x)][Math.ceil(y)].tileCont[c].tileObj.destroy();
-              this.mapa.data[Math.ceil(x)][Math.ceil(y)].tileCont[c] = new MapTileData({ 'img':t, 'z':z, 'tileObj':-1, 'tileCont':[], 'tint':-1 });
+              this.mapa.data[Math.ceil(x)][Math.ceil(y)].tileCont[c] = new MapTileData({ 'img':t, 'z':z, 'tileObj':-1, 'tileCont':[], 'tint':-1, 'mission':missionD });
               if (tint != -1) { this.mapa.data[Math.ceil(x)][Math.ceil(y)].tileCont[c].tint = tint; }
             }
           }
         }
         if (!encontrado) {
-          let i = new MapTileData({ 'img':t, 'z':z, 'tileObj':-1, 'tileCont':[], 'tint':-1 });
+          let i = new MapTileData({ 'img':t, 'z':z, 'tileObj':-1, 'tileCont':[], 'tint':-1, 'mission':missionD });
           if (tint != -1) { i.tint = tint; }
           this.mapa.data[Math.ceil(x)][Math.ceil(y)].tileCont.push( i ); }
       }
@@ -155,7 +157,7 @@ class GeneradorMapa {
 
   generarManzana(ox,oy, lx,ly, p=-1){
     if (p!=-1){
-      p.tint = p.mision.getColorID();
+      p.tint = p.mission.getColorID();
     }
 
     let cant_t   = 60;
@@ -171,6 +173,8 @@ class GeneradorMapa {
     this.newRect(0, px_f-c_m_anch,py_i, px_f,py_f, 13);
     //sobreescribir vereda
     this.newRect(0, px_i+c_m_anch*3,py_i+c_m_anch*3, px_f-c_m_anch*3,py_f-c_m_anch*3,  13,p);
+    //se generan los edificios
+    //this.newEdificio({x:px_i+10,y:py_i+10,h:9, tint:p.tint});
   }
 
   generarTerreno(misiones){
@@ -179,12 +183,11 @@ class GeneradorMapa {
     for (let c=0;c<8;c++){
       for(let j=0;j<8;j++){
           let mision = misiones[Math.floor((Math.random() * misiones.length))];
-          this.generarManzana(c,j,1,1,{'mision':mision });
+          this.generarManzana(c,j,1,1,{'mission':mision });
       }
     }
 
     this.generarLimites();
-    this.newEdificio({x:10,y:10,h:9});
   }
 
   getMapa(){

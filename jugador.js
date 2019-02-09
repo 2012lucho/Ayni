@@ -3,6 +3,10 @@ class Jugador extends ISOEntity{
   constructor(c){
     super(c);
     this.mundo.camera.startFollow(this.sprite, true);
+    this.px_dest = c.x; this.py_dest = c.y;
+    this.x = c.x; this.y = c.y;
+    this.sigueCam();
+    this.mundo.update();
   }
 
   update(e){
@@ -33,10 +37,10 @@ class Jugador extends ISOEntity{
 
   goToDest(){
     if (this.px_dest != -1 && this.py_dest != -1){
-      if (this.x < this.px_dest){ this.avanzarX(this.vel_desp); }
-      if (this.x > this.px_dest){ this.avanzarX(-this.vel_desp); }
-      if (this.y < this.py_dest){ this.avanzarY(this.vel_desp); }
-      if (this.y > this.py_dest){ this.avanzarY(-this.vel_desp); }
+      if (this.x < this.px_dest && this.px_dest-this.x > this.vel_desp){ this.avanzarX(this.vel_desp); }
+      if (this.x > this.px_dest && this.x-this.px_dest > this.vel_desp){ this.avanzarX(-this.vel_desp); }
+      if (this.y < this.py_dest && this.py_dest-this.y > this.vel_desp){ this.avanzarY(this.vel_desp); }
+      if (this.y > this.py_dest && this.y-this.py_dest > this.vel_desp){ this.avanzarY(-this.vel_desp); }
     }
   }
 

@@ -42,10 +42,10 @@ class MapTileData {
     this.tileObj   = p.tileObj;
     this.tileCont  = p.tileCont;
     this.construct = false;
-    this.mission   = false;
     this.hole      = false;
     this.tint      = p.tint;
     this.h         = 1;
+    this.mission   = p.mission;
     if(p.hole){ this.hole = true; }
   }
 }

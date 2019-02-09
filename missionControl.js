@@ -3,6 +3,8 @@ class Mission{
   constructor(p){
     this.mission_items  = [];
     this.colorID        = p.colorID;
+    this.name           = p.t;
+    this.description    = p.d;
     this.enemy_gen      = p.EG;
     this.escena         = p.escena;
   }
