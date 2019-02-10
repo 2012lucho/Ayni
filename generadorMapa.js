@@ -182,8 +182,9 @@ class GeneradorMapa {
     //se generan las manzanas
     for (let c=0;c<8;c++){
       for(let j=0;j<8;j++){
-          let mision = misiones[Math.floor((Math.random() * misiones.length))];
-          this.generarManzana(c,j,1,1,{'mission':mision });
+          let z = new Mission( misiones[Math.floor((Math.random() * misiones.length))] );
+          this.mapa.registerZone(z);
+          this.generarManzana(c,j,1,1,{'mission':z });
       }
     }
 

@@ -7,21 +7,27 @@ class Mission{
     this.description    = p.d;
     this.enemy_gen      = p.EG;
     this.escena         = p.escena;
+    this.items_gen      = p.itemGen;
+    this.items          = [];
+
+    this.generateItems();
   }
 
   addMissionItem(m){ this.mission_items.push(m); }
   addMissionDay(d) { this.mission_days.push(d);  }
   getColorID()     { return this.colorID;        }
-}
 
-class MCDay{
-  constructor(){
-
+  update(){
+    for(let c=0; c<this.items.length; c++){ this.items[c].update(); }
   }
-}
 
-class MissionItem{
-  constructor(){
-
+  generateItems(){
+    for(let c=0;c < this.items_gen.length; c++){
+      for(let j=0; j<this.items_gen[c].cant; j++){
+        this.addItem(new Item(this.items_gen[c].item) );
+      }
+    }
   }
+
+  addItem(i){ this.items.push(i); }
 }

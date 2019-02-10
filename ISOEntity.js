@@ -3,26 +3,37 @@ class ISOEntity{
     this.vida  = 100;
     this.items = [];
 
-    this.x  = 15;
-    this.y  = 15;
-    this.z  = 0;
+    this.x  = c.x;
+    this.y  = c.y;
+    this.z  = 1;
     this.px = 0;
     this.py = 0;
 
-    this.escena    = c.escena;
-    this.vel_desp  = c.vel_desp;
-    this.mundo     = c.mundo;
-    this.altura    = 1;
+    this.escena     = c.escena;
+    this.vel_desp_n = c.vel_desp;
+    this.vel_desp_f = c.vel_desp;
+    this.vel_desp   = 0;
+    this.acelerat   = 0.2;
+    this.mundo      = c.mundo;
+    this.altura     = 1;
 
-    this.px_dest   = -1; this.py_dest = -1;
+    this.img         = c.img;
+    this.name        = c.name;
+    this.description = c.description;
 
-    this.sprite = this.escena.add.image(this.px,this.py, 'point');
+    this.px_dest   = this.x; this.py_dest = this.y;
+    this.sprite = this.escena.add.image(this.px,this.py, this.img);
   }
 
   update(){
     this.corrigueLimites();
     this.calcPosition();
     this.goPosition();
+  }
+
+  aceleraTo(){
+    if (this.vel_desp < this.vel_desp_f && this.vel_desp_f-this.vel_desp>this.acelerat){ this.vel_desp += this.acelerat;  }
+    else { if (this.vel_desp > this.vel_desp_f && this.vel_desp-this.vel_desp_f>this.acelerat){ this.vel_desp -= this.acelerat; } }
   }
 
   positionPosible(x,y){
@@ -79,6 +90,15 @@ class ISOEntity{
     this.sprite.x     = this.px;
     this.sprite.y     = this.py;
     this.sprite.depth = this.z*this.mundo.screen_y+this.py;
+  }
+
+  goToDest(){
+    if (this.px_dest != -1 && this.py_dest != -1){
+      if (this.x < this.px_dest && this.px_dest-this.x > this.vel_desp){ this.avanzarX(this.vel_desp);  this.aceleraTo(); }
+      if (this.x > this.px_dest && this.x-this.px_dest > this.vel_desp){ this.avanzarX(-this.vel_desp); this.aceleraTo(); }
+      if (this.y < this.py_dest && this.py_dest-this.y > this.vel_desp){ this.avanzarY(this.vel_desp);  this.aceleraTo(); }
+      if (this.y > this.py_dest && this.y-this.py_dest > this.vel_desp){ this.avanzarY(-this.vel_desp); this.aceleraTo(); }
+    }
   }
 
   corrigueLimites(){

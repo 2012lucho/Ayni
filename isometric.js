@@ -1,18 +1,16 @@
 
 class IsometricWorld{
-  constructor(e,i,m,td, es){
+  constructor(e,i,td, es){
     this.escena     = e;
     this.sprite_img = i;
-    this.sprite_map = m;
+    this.sprite_map = -1;
     this.tile_den   = td;
     this.mundo      = es;
 
     this.config = {
-      "tile_W": 64,
-      "tile_H": 64,
+      "tile_W": 64, "tile_H": 64,
 
-      "map_long_x": m.config.tiles_x,
-      "map_long_y": m.config.tiles_y,
+      "map_long_x": 0, "map_long_y": 0,
     };
 
     this.screen_x  = es.config.scale.width;
@@ -37,7 +35,11 @@ class IsometricWorld{
       'cache_ck':[ [{'x':-1,'y':-1},{'x':-1,'y':-1},{'x':-1,'y':-1}], [{'x':-1,'y':-1},{'x':-1,'y':-1},{'x':-1,'y':-1}], [{'x':-1,'y':-1},{'x':-1,'y':-1},{'x':-1,'y':-1}] ],
       'ckX':0,'ckY':0,'update':true
     };
+  }
 
+  setMap(m){
+    this.sprite_map = m;
+    this.config.map_long_x = m.config.tiles_x; this.config.map_long_y = m.config.tiles_y;
     this.draw();
   }
 

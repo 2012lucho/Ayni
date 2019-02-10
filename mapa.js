@@ -3,8 +3,11 @@ class Mapa {
     this.config         = cfg;
     this.data           = [];
     this.construcciones = [];
+    this.zonas          = [];
     this.chunks = { 'cantX':cfg.tiles_x/cfg.chunk_t, 'cantY':cfg.tiles_y/cfg.chunk_t };
   }
+
+  registerZone(z){ this.zonas.push(z); }
 
   registrarConstruc(c){
     this.construcciones.push(c);
@@ -32,6 +35,12 @@ class Mapa {
       }
     }
     return chunk;
+  }
+
+  update(){
+    for (let c=0; c<this.zonas.length; c++){
+      this.zonas[c].update();
+    }
   }
 }
 
