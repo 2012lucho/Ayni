@@ -109,6 +109,10 @@ class ISOEntity{
     if( this.y > this.mundo.sprite_map.config.tiles_y ){ this.y = this.mundo.sprite_map.config.tiles_y; }
   }
 
+  playerCollision(){
+    if (Math.floor(this.mundo.cam_px)==Math.floor(this.x) && Math.floor(this.mundo.cam_py)==Math.floor(this.y)) { return true; } return false;
+  }
+
   destroy(){
 
   }

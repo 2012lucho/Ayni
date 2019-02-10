@@ -41,7 +41,8 @@ class Mundo{
 
         o.isometric = new IsometricWorld(e,'tiles', o.tile_den, o);
 
-        let canna = {'escena':e, 'mundo':o.isometric, 'x':240, 'y':240, 'img':'canna_s' };
+        let canna = {'escena':e, 'mundo':o.isometric, 'st':o, 'x':240, 'y':240, 'img':'canna_s', 'name':'Semillas de cannabis',
+                      'description': 'Cultivar: \n + 1 medicamento \n - 1 Narcotrafico' };
 
         let misiones = [
         {
