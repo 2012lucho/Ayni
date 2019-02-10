@@ -9,8 +9,7 @@ class Mission{
     this.escena         = p.escena;
     this.items_gen      = p.itemGen;
     this.items          = [];
-
-    this.generateItems();
+    this.limits_xy      = {};
   }
 
   addMissionItem(m){ this.mission_items.push(m); }
@@ -24,6 +23,8 @@ class Mission{
   generateItems(){
     for(let c=0;c < this.items_gen.length; c++){
       for(let j=0; j<this.items_gen[c].cant; j++){
+        this.items_gen[c].item.x = Phaser.Math.Between(this.limits_xy.x_i, this.limits_xy.x_f);
+        this.items_gen[c].item.y = Phaser.Math.Between(this.limits_xy.y_i, this.limits_xy.y_f);
         this.addItem(new Item(this.items_gen[c].item) );
       }
     }

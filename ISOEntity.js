@@ -110,7 +110,12 @@ class ISOEntity{
   }
 
   playerCollision(){
-    if (Math.floor(this.mundo.cam_px)==Math.floor(this.x) && Math.floor(this.mundo.cam_py)==Math.floor(this.y)) { return true; } return false;
+    for(let c=-1; c<2;c++){
+      for(let i=-1;i<2;i++){
+          if (Math.floor(this.mundo.cam_px+c)==Math.floor(this.x) && Math.floor(this.mundo.cam_py+i)==Math.floor(this.y)) { return true; }
+      }
+    }
+    return false;
   }
 
   destroy(){

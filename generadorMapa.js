@@ -164,6 +164,8 @@ class GeneradorMapa {
     let c_m_anch = 3;
     let px_i = ox*(cant_t);        let py_i = oy*(cant_t);
     let px_f = ox*(cant_t)+cant_t; let py_f = oy*(cant_t)+cant_t;
+    p.mission.limits_xy = {x_i:px_i, y_i:py_i, x_f:px_f, y_f:py_f};
+    p.mission.generateItems();
     //piso
     this.newRect(0, px_i,py_i, px_f,py_f,  12,p);
     //calle

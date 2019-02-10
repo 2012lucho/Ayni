@@ -92,7 +92,7 @@ class Mundo{
         this.input.setDefaultCursor('url(./img/point.png), pointer');
         this.input.addPointer(1);
 
-        o.prota = new Jugador({ 'escena':e, 'vel_desp':0.375, 'mundo':o.isometric, 'x':mapConfig.tiles_x/2, 'y':mapConfig.tiles_y/2, 'img':'point' });
+        o.prota = new Jugador({ 'escena':e, 'vel_desp':1.275, 'mundo':o.isometric, 'x':mapConfig.tiles_x/2, 'y':mapConfig.tiles_y/2, 'img':'point' });
         o.prota.z = 1;
 
       }
