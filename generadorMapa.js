@@ -1,9 +1,9 @@
 
 class GeneradorMapa {
 
-  constructor(cfg){
-    this.config = cfg;
-    this.mapa   = new Mapa(this.config);
+  constructor(){
+    this.config = {};
+    this.mapa   = -1;
   }
 
   generarPlanicie(){
@@ -18,12 +18,12 @@ class GeneradorMapa {
 
   //se generan paredes alrededor del Mapa
   generarLimites(){
-    let alto = 5;
+    let alto = 3;
     for (let c1=1; c1<alto; c1++){
-        this.newLine(c1, 0,0, 0,this.mapa.config.tiles_y ,1, 1);
-        this.newLine(c1, 0,0, this.mapa.config.tiles_x,0 ,1, 1);
-        this.newLine(c1, this.mapa.config.tiles_x-1,this.mapa.config.tiles_y-1, 0,this.mapa.config.tiles_y ,1, 1);
-        this.newLine(c1, this.mapa.config.tiles_x-1,this.mapa.config.tiles_y-1, this.mapa.config.tiles_x,0 ,1, 1);
+        this.newLine(c1, 1,1, 1,this.mapa.config.tiles_y ,1, 1);
+        this.newLine(c1, 1,1, this.mapa.config.tiles_x,1 ,1, 1);
+        this.newLine(c1, this.mapa.config.tiles_x-1,this.mapa.config.tiles_y-1, 1,this.mapa.config.tiles_y-1 ,1, 1);
+        this.newLine(c1, this.mapa.config.tiles_x-1,this.mapa.config.tiles_y-1, this.mapa.config.tiles_x-1,1 ,1, 1);
     }
   }
 
@@ -164,8 +164,6 @@ class GeneradorMapa {
     let c_m_anch = 3;
     let px_i = ox*(cant_t);        let py_i = oy*(cant_t);
     let px_f = ox*(cant_t)+cant_t; let py_f = oy*(cant_t)+cant_t;
-    p.mission.limits_xy = {x_i:px_i, y_i:py_i, x_f:px_f, y_f:py_f};
-    p.mission.generateItems();
     //piso
     this.newRect(0, px_i,py_i, px_f,py_f,  12,p);
     //calle
@@ -179,17 +177,10 @@ class GeneradorMapa {
     //this.newEdificio({x:px_i+10,y:py_i+10,h:9, tint:p.tint});
   }
 
-  generarTerreno(misiones){
+  generarTerreno(cfg){
+    this.config = cfg;
+    this.mapa   = new Mapa(this.config);
     this.generarPlanicie();
-    //se generan las manzanas
-    for (let c=0;c<8;c++){
-      for(let j=0;j<8;j++){
-          let z = new Mission( misiones[Math.floor((Math.random() * misiones.length))] );
-          this.mapa.registerZone(z);
-          this.generarManzana(c,j,1,1,{'mission':z });
-      }
-    }
-
     this.generarLimites();
   }
 

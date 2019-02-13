@@ -27,16 +27,6 @@ class Jugador extends ISOEntity{
     e.input.keyboard.on('keydown-SHIFT', function (event) { IOSE.vel_desp_f = IOSE.vel_desp_n*3;  });
     e.input.keyboard.on('keyup-SHIFT',   function (event) { IOSE.vel_desp_f = IOSE.vel_desp_n;  });
 
-    //se apreta el mouse
-    if (e.input.pointer1.isDown) {
-      let c = IOSE.getMapCoords(e.input.pointer1.x, e.input.pointer1.y);
-      IOSE.px_dest = c.x; IOSE.py_dest = c.y; }
-
-    e.input.on('pointerdown', function (pointer) {
-      let c = IOSE.getMapCoords(pointer.event.clientX,pointer.event.clientY);
-      IOSE.px_dest = c.x; IOSE.py_dest = c.y;
-    }, e);
-
     //tecla de acción
     e.input.keyboard.on('keydown-E', function (event) {  if (!this.action_key){ this.actionKey(); this.action_key = true; }  });
 

@@ -12,7 +12,7 @@ class ISOEntity{
     this.escena     = c.escena;
     this.vel_desp_n = c.vel_desp;
     this.vel_desp_f = c.vel_desp;
-    this.vel_desp   = 0;
+    this.vel_desp   = c.vel_desp;
     this.acelerat   = 0.2;
     this.mundo      = c.mundo;
     this.altura     = 1;

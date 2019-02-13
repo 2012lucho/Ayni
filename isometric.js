@@ -30,11 +30,6 @@ class IsometricWorld{
     this.cam_alt  = 2;
 
     this.camera = this.escena.cameras.main;
-    this.chunk  = {
-      'cache':[ [[],[],[]], [[],[],[]], [[],[],[]] ],
-      'cache_ck':[ [{'x':-1,'y':-1},{'x':-1,'y':-1},{'x':-1,'y':-1}], [{'x':-1,'y':-1},{'x':-1,'y':-1},{'x':-1,'y':-1}], [{'x':-1,'y':-1},{'x':-1,'y':-1},{'x':-1,'y':-1}] ],
-      'ckX':0,'ckY':0,'update':true
-    };
   }
 
   setMap(m){
@@ -49,11 +44,6 @@ class IsometricWorld{
     this.cant_py = Math.floor(this.screen_y/(this.config.tile_H * this.zoom/4));
     this.cant_px = Math.floor(this.screen_x/(this.config.tile_W * this.zoom/2));
 
-    //se obtiene el chunk actual
-    this.chunk.ckX = ( this.cam_px )/this.sprite_map.config.chunk_t;
-    this.chunk.ckY = ( this.cam_py )/this.sprite_map.config.chunk_t;
-    this.updateChunkCache();
-
     //se determina la posicion inicial "mapear"
     let px_i = Math.floor(this.cam_px);
     let py_i = Math.floor(this.cam_py);
@@ -67,68 +57,11 @@ class IsometricWorld{
     this.drawTiles(this.cant_py,px_fin,px_i+1,py_i,0);//"impar"
   }
 
-  updateChunkCache(){
-    let actualiza = false;
-    //se actualiza si en la cache la posicion actual no esta en el centro
-    if ( !(this.chunk.cache_ck[1][1].x == Math.floor(this.chunk.ckX) && this.chunk.cache_ck[1][1].y == Math.floor(this.chunk.ckY) ) ){
-      actualiza = true;
-    }
-
-    if (actualiza){
-      let ckc = this.chunk.cache_ck;
-      let ckh = this.chunk.cache;
-      //se limpia
-      for (let c=0; c<this.tiles.length; c++){
-          this.tiles[c].tileObj.destroy();
-          this.tiles[c].tileObj = -1;
-      }
-      this.tiles=[];
-      this.tileID=0;
-
-      //se actualiza
-      let x = Math.floor(this.chunk.ckX); let y = Math.floor(this.chunk.ckY);
-      if ( this.chunkInMapa(x-1,y-1) ) { ckh[0][0] = this.sprite_map.getChunk( x-1 ,y-1 ); ckc[0][0] = {'x':x-1,'y':y-1}; }
-      if ( this.chunkInMapa(x  ,y-1) ) { ckh[0][1] = this.sprite_map.getChunk( x   ,y-1 ); ckc[0][1] = {'x':x  ,'y':y-1}; }
-      if ( this.chunkInMapa(x+1,y-1) ) { ckh[0][2] = this.sprite_map.getChunk( x+1 ,y-1 ); ckc[0][2] = {'x':x+1,'y':y-1}; }
-
-      if ( this.chunkInMapa(x-1,y  ) ) { ckh[1][0] = this.sprite_map.getChunk( x-1 ,y );   ckc[1][0] = {'x':x-1,'y':y}; }
-      if ( this.chunkInMapa(x  ,y  ) ) { ckh[1][1] = this.sprite_map.getChunk( x   ,y );   ckc[1][1] = {'x':x  ,'y':y}; }
-      if ( this.chunkInMapa(x+1,y  ) ) { ckh[1][2] = this.sprite_map.getChunk( x+1 ,y );   ckc[1][2] = {'x':x+1,'y':y}; }
-
-      if ( this.chunkInMapa(x-1,y+1) ) { ckh[2][0] = this.sprite_map.getChunk( x-1 ,y+1 ); ckc[2][0] = {'x':x-1,'y':y+1}; }
-      if ( this.chunkInMapa(x  ,y+1) ) { ckh[2][1] = this.sprite_map.getChunk( x   ,y+1 ); ckc[2][1] = {'x':x  ,'y':y+1}; }
-      if ( this.chunkInMapa(x+1,y+1) ) { ckh[2][2] = this.sprite_map.getChunk( x+1 ,y+1 ); ckc[2][2] = {'x':x+1,'y':y+1}; }
-      actualiza = false;
-    }
-  }
-
   getTileData(x,y){
     x = Math.floor(x); y = Math.floor(y);
     if (!this.enMapa(x,y) ){ return -1;  }
-    let ckc = this.chunk.cache_ck;
 
-    for (let c=0; c<ckc.length; c++){
-      for (let j=0; j<ckc[c].length; j++){
-        let x_i = ckc[c][j].x * this.sprite_map.config.chunk_t;
-        let y_i = ckc[c][j].y * this.sprite_map.config.chunk_t;
-        let x_l = x_i + this.sprite_map.config.chunk_t;
-        let y_l = y_i + this.sprite_map.config.chunk_t;
-
-        if (this.chunk.cache[c][j].length != 0 && x>=x_i && y>=y_i && x<=x_l && y<=y_l){
-          let px  = (x-1)%this.sprite_map.config.chunk_t;
-          let py  = (y-1)%this.sprite_map.config.chunk_t;
-          if (this.chunk.cache[c][j][px] == undefined) { return -1; }
-          if (this.chunk.cache[c][j][px][py] == undefined) { return -1; }
-          return this.chunk.cache[c][j][px][py];
-        }
-      }
-    }
-
-    return -1;
-  }
-
-  chunkInMapa(x,y){
-    if ( x < 0 || y < 0 || x > this.sprite_map.chunks.cantX || y > this.sprite_map.chunks.cantY ){ return false; } return true;
+    return this.sprite_map.data[x][y];
   }
 
   drawTiles(cant_py,px_fin,px_i,py_i,z){
@@ -138,6 +71,7 @@ class IsometricWorld{
       for (let px = px_i;px<=px_fin;px++){
         py += 1;
         let td = this.getTileData(px,py);
+
         if ( td != -1 ){
           //creamos un nuevo tile en caso que no exista
           if(td.tileObj === -1 && !td.hole){
@@ -158,7 +92,7 @@ class IsometricWorld{
           }
           //obtenemos los datos de la zona en la que se esta parado
           if ( Math.floor(px)==Math.floor(this.cam_px) && Math.floor(py)==Math.floor(this.cam_py)){
-            this.mundo.setMissionInfo(td.mission);
+            //this.mundo.setMissionInfo(td.mission);
           }
         }
       }
@@ -182,9 +116,7 @@ class IsometricWorld{
   }
 
   enMapa(px,py){
-    if (px>0 && px<this.sprite_map.config.tiles_x && py>0 && py<this.sprite_map.config.tiles_y){
-      return true;
-    }
+    if (px>0 && px<this.sprite_map.config.tiles_x && py>0 && py<this.sprite_map.config.tiles_y){ return true; }
     return false;
   }
 

@@ -10,6 +10,18 @@ class Mission{
     this.items_gen      = p.itemGen;
     this.items          = [];
     this.limits_xy      = {};
+
+    this.mapa       = p.mapa;
+    this.map_config = p.map_config;
+    this.mapa_gen   = p.mapa_gen;
+  }
+
+  getMap(){
+    this.mapa_gen.generarTerreno(this.map_config);
+    this.limits_xy = {x_i:3, y_i:3, x_f:this.map_config.tiles_x-3, y_f:this.map_config.tiles_y-3};
+    this.generateItems();
+    this.mapa = this.mapa_gen.getMapa();
+    return this.mapa;
   }
 
   addMissionItem(m){ this.mission_items.push(m); }

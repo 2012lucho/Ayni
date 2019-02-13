@@ -1,7 +1,7 @@
 
 class Juego{
   constructor(){
-    this.vp = {'w':window.innerWidth,'h':window.innerHeight,'sc':1}; // window.innerWidth
+    this.vp = {'w':960,'h':540,'sc':1}; // window.innerWidth
     this.config = {
       type: Phaser.AUTO,
       scale: {

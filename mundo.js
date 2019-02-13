@@ -1,16 +1,16 @@
 
 class Mundo{
     constructor(config){
-      this.name     = 'Mundo';
-      this.config   = config;
-      this.escena   = new Phaser.Scene(this.name);
-      config.scene  = this.escena;
-      this.mapa     = [];
-      this.tile_den = [];
-      this.items    = [];
-      this.texts    = {'t':'', 'd':''};
-      this.mission  = -1;
-      this.prota    = -1;
+      this.name        = 'Mundo';
+      this.config      = config;
+      this.escena      = new Phaser.Scene(this.name);
+      config.scene     = this.escena;
+      this.mapa_actual = -1;
+      this.tile_den    = [];
+      this.items       = [];
+      this.texts       = {'t':'', 'd':''};
+      this.mission     = -1;
+      this.prota       = -1;
       this.preload();
     }
 
@@ -33,13 +33,13 @@ class Mundo{
       this.escena.create = function(){
 
         let mapConfig  = {
-          "tiles_x":480,
-          "tiles_y":480,
-          "tiles_z":1,
-          "chunk_t":64
+          "tiles_x":64,
+          "tiles_y":64,
+          "tiles_z":1
         };
 
         o.isometric = new IsometricWorld(e,'tiles', o.tile_den, o);
+        let GM      = new GeneradorMapa();
 
         let canna = {'escena':e, 'mundo':o.isometric, 'st':o, 'x':240, 'y':240, 'img':'canna_s', 'name':'Semillas de cannabis',
                       'description': 'Cultivar: \n + 1 medicamento \n - 1 Narcotrafico' };
@@ -47,42 +47,48 @@ class Mundo{
         let misiones = [
         {
           colorID:0x008080, t:'Secretaría de salud', 'd': 'Derrotar los brotes virales',
-          itemGen:[{'cant':2, 'item':canna }]
+          itemGen:[{'cant':2, 'item':canna }],
+          mapa_gen:GM, map_config: mapConfig
         },
         {
           colorID:0x668000, t:'La privada', 'd':'Objetivo: Defender la universidad',
-          itemGen:[]
+          itemGen:[],
+          mapa_gen:GM, map_config: mapConfig
         },
         {
           colorID:0xCCFF00, t:'Verde', 'd':'Objetivo: Derrotar el narcotráfico',
-          itemGen:[]
+          itemGen:[],
+          mapa_gen:GM, map_config: mapConfig
         },
         {
           colorID:0x1A1A1A, t:'Camino a la oscuridad', 'd':'Objetivo: Derrotar los tarifazos a la Luz',
-          itemGen:[]
+          itemGen:[],
+          mapa_gen:GM, map_config: mapConfig
         },
         {
           colorID:0x0044AA, t:'Industricidio', 'd':'Objetivo: Proteger la industria',
-          itemGen:[]
+          itemGen:[],
+          mapa_gen:GM, map_config: mapConfig
         },
         {
           colorID:0x9b9692, t:'Dale gas', 'd':'Objetivo: Derrotar los tarifazos al Gas',
-          itemGen:[]
+          itemGen:[],
+          mapa_gen:GM, map_config: mapConfig
         },
         {
           colorID:0x00a457, t:'FMI - World', 'd':'Objetivo: Recuperar los dólares de las garras de los buitres',
-          itemGen:[]
+          itemGen:[],
+          mapa_gen:GM, map_config: mapConfig
         },
         {
           colorID:0xffb100, t:'Globo City', 'd':'Objetivo: Pinchar todos los globos de Durán Barba',
-          itemGen:[]
+          itemGen:[],
+          mapa_gen:GM, map_config: mapConfig
         }];
 
-        let GM = new GeneradorMapa(mapConfig);
-        GM.generarTerreno(misiones);
-        o.mapa = GM.mapa;
-        o.isometric.setMap( GM.getMapa() );
+        o.setMissionInfo( new Mission(misiones[0]) );
 
+        // Textos
         o.texts.t = this.add.text(5, 0).setScrollFactor(0).setFontSize(13).setColor('#ffffff');
         o.texts.t.depth = 40000;
         o.texts.t.fontWeight = 'bold';
@@ -92,7 +98,7 @@ class Mundo{
         this.input.setDefaultCursor('url(./img/point.png), pointer');
         this.input.addPointer(1);
 
-        o.prota = new Jugador({ 'escena':e, 'vel_desp':1.275, 'mundo':o.isometric, 'x':mapConfig.tiles_x/2, 'y':mapConfig.tiles_y/2, 'img':'point' });
+        o.prota = new Jugador({ 'escena':e, 'vel_desp':0.247575, 'mundo':o.isometric, 'x':mapConfig.tiles_x/2, 'y':mapConfig.tiles_y/2, 'img':'point' });
         o.prota.z = 1;
 
       }
@@ -104,13 +110,16 @@ class Mundo{
         }
 
         o.prota.update(this);
-        o.mapa.update();
+        o.mission.update();
       }
 
       this.game = new Phaser.Game(this.config);
     }
 
     setMissionInfo(m){
-      this.mission = m;
+      this.mission     = m;
+      this.mapa_actual = this.mission.getMap();
+      this.isometric.setMap(this.mapa_actual);
+      this.isometric.update();
     }
 }
