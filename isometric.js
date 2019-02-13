@@ -16,7 +16,7 @@ class IsometricWorld{
     this.screen_x  = es.config.scale.width;
     this.screen_y  = es.config.scale.height;
     this.screen_sc = es.config.scale.app_scale;
-    this.zoom      = es.config.scale.app_scale;
+    this.zoom      = 1;//es.config.scale.app_scale;
 
     this.tiles   = [];
     this.tileID  = 0;
@@ -58,10 +58,6 @@ class IsometricWorld{
     let px_i = Math.floor(this.cam_px);
     let py_i = Math.floor(this.cam_py);
 
-    //Se posiciona la camara
-    //let dx = this.cam_px - Math.floor(this.cam_px); let dy = this.cam_py - Math.floor(this.cam_py); // parte decimal
-    //this.camera.scrollX = (px_i + dx - py_i - dy) * ((this.config.tile_W)/2) - this.screen_x*this.zoom/2;
-  //  this.camera.scrollY = (px_i + dx + py_i + dy) * ((this.config.tile_H)/3.555) - this.screen_y*this.zoom/2;// - this.cam_pz*((this.config.tile_H)/2.5);
     this.camera.zoom    = this.zoom;
 
     px_i = px_i - this.cant_px/2 - this.cant_py/4; py_i =py_i + this.cant_px/2 - this.cant_py/4;

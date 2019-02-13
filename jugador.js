@@ -7,6 +7,7 @@ class Jugador extends ISOEntity{
     this.sigueCam();
     this.mundo.update();
     this.action_key = false;
+    this.sprite.scale = 0.3;
   }
 
   update(e){

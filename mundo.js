@@ -83,10 +83,10 @@ class Mundo{
         o.mapa = GM.mapa;
         o.isometric.setMap( GM.getMapa() );
 
-        o.texts.t = this.add.text(-225, -150).setScrollFactor(0).setFontSize(30).setColor('#ffffff');
+        o.texts.t = this.add.text(5, 0).setScrollFactor(0).setFontSize(13).setColor('#ffffff');
         o.texts.t.depth = 40000;
         o.texts.t.fontWeight = 'bold';
-        o.texts.d = this.add.text(-225, -120).setScrollFactor(0).setFontSize(25).setColor('#ddddff');
+        o.texts.d = this.add.text(5, 18).setScrollFactor(0).setFontSize(10).setColor('#ddddff');
         o.texts.d.depth = 40000;
 
         this.input.setDefaultCursor('url(./img/point.png), pointer');

@@ -5,8 +5,9 @@ class Item extends ISOEntity{
 
     this.altura = 1;
     this.stage  = c.st;
-    this.text   = this.escena.add.text(0,0).setScrollFactor(1).setFontSize(30).setColor('#ffffff');
+    this.text   = this.escena.add.text(0,0).setScrollFactor(1).setFontSize(10).setColor('#ffffff');
     this.text.depth = 40000;
+    this.sprite.setScale(0.3);
   }
 
   update(){
