@@ -1,6 +1,8 @@
 class EnemyGenerator{
   constructor(p){
-    this.enemy = p.e;
+    this.enemys    = [];
+    this.enemy_cnf = p.enemy_cnf;
+    this.gen_cnf   = p.gen_cnf;
   }
 }
 

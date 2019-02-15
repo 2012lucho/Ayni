@@ -1,7 +1,7 @@
 
-class Mission{
+class Zone{
   constructor(p){
-    this.mission_items  = [];
+    this.Zone_items  = [];
     this.colorID        = p.colorID;
     this.name           = p.t;
     this.description    = p.d;
@@ -24,8 +24,8 @@ class Mission{
     return this.mapa;
   }
 
-  addMissionItem(m){ this.mission_items.push(m); }
-  addMissionDay(d) { this.mission_days.push(d);  }
+  addZoneItem(m){ this.Zone_items.push(m); }
+  addZoneDay(d) { this.Zone_days.push(d);  }
   getColorID()     { return this.colorID;        }
 
   update(){

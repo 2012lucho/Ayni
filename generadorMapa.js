@@ -11,7 +11,7 @@ class GeneradorMapa {
       this.mapa.data.push([]);
       for (let py=0;py<this.config.tiles_y;py++){
         this.mapa.data[px].push([]);
-        this.mapa.data[px][py] = new MapTileData({ 'img':0, 'z':0, 'tileObj':-1, 'tileCont':[], 'tint':-1, 'mission':-1 });
+        this.mapa.data[px][py] = new MapTileData({ 'img':1, 'z':0, 'tileObj':-1, 'tileCont':[], 'tint':-1, 'Zone':-1 });
       }
     }
   }
@@ -20,10 +20,10 @@ class GeneradorMapa {
   generarLimites(){
     let alto = 3;
     for (let c1=1; c1<alto; c1++){
-        this.newLine(c1, 1,1, 1,this.mapa.config.tiles_y ,1, 1);
-        this.newLine(c1, 1,1, this.mapa.config.tiles_x,1 ,1, 1);
-        this.newLine(c1, this.mapa.config.tiles_x-1,this.mapa.config.tiles_y-1, 1,this.mapa.config.tiles_y-1 ,1, 1);
-        this.newLine(c1, this.mapa.config.tiles_x-1,this.mapa.config.tiles_y-1, this.mapa.config.tiles_x-1,1 ,1, 1);
+        this.newLine(c1, 1,1, 1,this.mapa.config.tiles_y ,1, 2);
+        this.newLine(c1, 1,1, this.mapa.config.tiles_x,1 ,1, 2);
+        this.newLine(c1, this.mapa.config.tiles_x-1,this.mapa.config.tiles_y-1, 1,this.mapa.config.tiles_y-1 ,1, 2);
+        this.newLine(c1, this.mapa.config.tiles_x-1,this.mapa.config.tiles_y-1, this.mapa.config.tiles_x-1,1 ,1, 2);
     }
   }
 
@@ -90,14 +90,14 @@ class GeneradorMapa {
     let arrT = this.mapa.data[Math.ceil(x)][Math.ceil(y)].tileCont;
     for (let c=0; c<arrT.length; c++){
       if ( arrT[c].z == z ){
-        arrT[c] = new MapTileData({ 'hole':true, 'img':-1, 'z':z, 'tileObj':1, 'tileCont':[],'mission':-1 });
+        arrT[c] = new MapTileData({ 'hole':true, 'img':-1, 'z':z, 'tileObj':1, 'tileCont':[],'Zone':-1 });
       }
     }
   }
 
   insertaBloque(x,y,z,t,p=-1){
     let tint     =-1; if(p!=-1 && p.tint)   { tint     = p.tint; }
-    let missionD =-1; if(p!=-1 && p.mission){ missionD = p.mission; }
+    let ZoneD =-1; if(p!=-1 && p.Zone){ ZoneD = p.Zone; }
 
     if (this.enMapa(z,Math.ceil(x), Math.ceil(y) )){
       if (z<1){
@@ -105,7 +105,7 @@ class GeneradorMapa {
         if(this.mapa.data[Math.ceil(x)][Math.ceil(y)].tileObj != -1){
           this.mapa.data[Math.ceil(x)][Math.ceil(y)].tileObj.destroy();
         }
-        this.mapa.data[Math.ceil(x)][Math.ceil(y)] = new MapTileData({ 'img':t, 'z':z, 'tileObj':-1, 'tileCont':[],'tint':-1, 'mission':missionD });
+        this.mapa.data[Math.ceil(x)][Math.ceil(y)] = new MapTileData({ 'img':t, 'z':z, 'tileObj':-1, 'tileCont':[],'tint':-1, 'Zone':ZoneD });
         if (tint != -1) { this.mapa.data[Math.ceil(x)][Math.ceil(y)].tint = tint; }
         this.mapa.data[Math.ceil(x)][Math.ceil(y)].construct = dCT; //que no se pierdan los datos del tile
       } else {
@@ -115,13 +115,13 @@ class GeneradorMapa {
           if ( this.mapa.data[Math.ceil(x)][Math.ceil(y)].tileCont[c].z == z ){
             if(this.mapa.data[Math.ceil(x)][Math.ceil(y)].tileCont[c].tileObj != -1){
               this.mapa.data[Math.ceil(x)][Math.ceil(y)].tileCont[c].tileObj.destroy();
-              this.mapa.data[Math.ceil(x)][Math.ceil(y)].tileCont[c] = new MapTileData({ 'img':t, 'z':z, 'tileObj':-1, 'tileCont':[], 'tint':-1, 'mission':missionD });
+              this.mapa.data[Math.ceil(x)][Math.ceil(y)].tileCont[c] = new MapTileData({ 'img':t, 'z':z, 'tileObj':-1, 'tileCont':[], 'tint':-1, 'Zone':ZoneD });
               if (tint != -1) { this.mapa.data[Math.ceil(x)][Math.ceil(y)].tileCont[c].tint = tint; }
             }
           }
         }
         if (!encontrado) {
-          let i = new MapTileData({ 'img':t, 'z':z, 'tileObj':-1, 'tileCont':[], 'tint':-1, 'mission':missionD });
+          let i = new MapTileData({ 'img':t, 'z':z, 'tileObj':-1, 'tileCont':[], 'tint':-1, 'Zone':ZoneD });
           if (tint != -1) { i.tint = tint; }
           this.mapa.data[Math.ceil(x)][Math.ceil(y)].tileCont.push( i ); }
       }
@@ -157,7 +157,7 @@ class GeneradorMapa {
 
   generarManzana(ox,oy, lx,ly, p=-1){
     if (p!=-1){
-      p.tint = p.mission.getColorID();
+      p.tint = p.Zone.getColorID();
     }
 
     let cant_t   = 60;

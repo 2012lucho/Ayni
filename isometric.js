@@ -1,10 +1,9 @@
 
 class IsometricWorld{
-  constructor(e,i,td, es){
+  constructor(e,i, es){
     this.escena     = e;
     this.sprite_img = i;
     this.sprite_map = -1;
-    this.tile_den   = td;
     this.mundo      = es;
 
     this.config = {
@@ -30,6 +29,7 @@ class IsometricWorld{
     this.cam_alt  = 2;
 
     this.camera = this.escena.cameras.main;
+    this.frames = this.escena.textures.get('isoblocks').getFrameNames();
   }
 
   setMap(m){
@@ -92,7 +92,7 @@ class IsometricWorld{
           }
           //obtenemos los datos de la zona en la que se esta parado
           if ( Math.floor(px)==Math.floor(this.cam_px) && Math.floor(py)==Math.floor(this.cam_py)){
-            //this.mundo.setMissionInfo(td.mission);
+            //this.mundo.setZoneInfo(td.Zone);
           }
         }
       }
@@ -167,7 +167,7 @@ class Tile{
     }
 
     if (this.sprite == ''){
-      this.sprite = this.escena.add.image(this.px,this.py, this.p.tile_den[this.tile.img].den);
+      this.sprite = this.escena.add.image(this.px,this.py, 'isoblocks',this.tile.img);
       if (this.tile.tint != -1){ this.sprite.setTint(this.tile.tint); }
     }
 
